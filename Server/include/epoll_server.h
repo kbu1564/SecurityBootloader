@@ -4,7 +4,8 @@
 class EpollServer
 {
 protected:
-	const int mPort;
+	int mPort;
+    int mSfd;
 public:
 	EpollServer();
 	~EpollServer();
@@ -16,6 +17,8 @@ public:
 private:
 	EpollServer(const EpollServer& es);
 	EpollServer& operator=(const EpollServer& es);
+
+    void __reporting(char* funcname, int retval) const;
 };
 
 #endif
