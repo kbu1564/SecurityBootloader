@@ -18,7 +18,7 @@ source code packages. These scripts can adapt the packages to many kinds of UNIX
 user intervention. Autoconf creates a configuration script for a package from a template file that lists the 
 operating system features that the package can use, in the form of M4 macro calls.
 -> Autoconf에 자동으로 소프트웨어 소스코드의 패키지를 구성하는 쉘 스크립트를 생성하는 M4 Macro 의 확장 패키지
--> 이 스크립트는 수동 사용자 개입없이 유닉스 계열 시스템의 많은 종류의 패키지에 적용가능
+-> 이 스크립트는 자동으로 유닉스 계열 시스템의 많은 종류의 패키지에 적용가능
 참조 : http://www.gnu.org/software/autoconf/autoconf.html
 
 4. Type `./configure' to configure the package for your system.
