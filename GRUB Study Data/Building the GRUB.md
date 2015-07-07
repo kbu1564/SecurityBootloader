@@ -1,5 +1,10 @@
 # Buliding the GRUB
 ```
+INSTALL 참고자료 https://github.com/coreos/grub/blob/master/INSTALL
+
+처음 SETTING : git clone https://github.com/coreos/grub.git
+파일을 받아야함 !! 
+
 1. `cd' to the directory containing the package's source code.
 -> cd 명령어를 이용하여 package source code 있는곳으로 가라 
 
