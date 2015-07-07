@@ -5,6 +5,9 @@ INSTALL 참고자료 https://github.com/coreos/grub/blob/master/INSTALL
 처음 SETTING : git clone https://github.com/coreos/grub.git
 파일을 받아야함 !! 
 
+명령어 SETTING은 해둘것 g++, gcc, make, cmake, autoconf, bison, flex
+-> 설치방법 : sudo apt-get install [설치할 파일]
+
 1. `cd' to the directory containing the package's source code.
 -> cd 명령어를 이용하여 package source code 있는곳으로 가라 
 
@@ -16,7 +19,7 @@ step 4. If you want translations type `./linguas.sh'.
 -> 명령어 ./autogen.sh를 입력하시오
 error : ./autogen.sh 줄 83 autoreconf 명령어를 찾을 수 없음 .. 
 해결법 ->   sudo apt-get install autoconf
-     -> autconf 설치가 필요하다 
+-> autconf 설치가 필요하다 
 autconf 란
 Autoconf is an extensible package of M4 macros that produce shell scripts to automatically configure software 
 source code packages. These scripts can adapt the packages to many kinds of UNIX-like systems without manual 
@@ -68,6 +71,8 @@ also a `make maintainer-clean' target, but that is intended mainly
 for the package's developers.  If you use it, you may have to get
 all sorts of other programs in order to regenerate files that came
 with the distribution.
+
+* 다른오류 발견시 알려주시면 감사합니다 수정해서 반영하겠습니다.!!
 
 ```
 출저 : https://github.com/coreos/grub
