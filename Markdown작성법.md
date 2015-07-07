@@ -61,11 +61,15 @@ H3 ### , H4 #### , H5 ##### , H6 ######
 
 [링크명](url)
 ```
+
 더 자세한 내용은 밑에 참조 자료 참고 
 
 작성 방법 예제 교육 자료 : http://scriptogr.am/myevan/post/markdown-syntax-guide-for-scriptogram
+
 마크다운 문법 교육 자료 : http://sergeswin.com/1013
+
 Live preview : http://github.github.com/github-flavored-markdown/preview.html
+
 ```
 '작성자 : https://github.com/GangHoyong'
 ```
