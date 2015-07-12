@@ -272,7 +272,7 @@ grub_main (void)
   /* Hello.  */
   grub_setcolorstate (GRUB_TERM_COLOR_HIGHLIGHT);
   grub_printf ("Welcome to GRUB!\n");
-  grub_printf ("Security Mulit-Bootloader @TNTeam #1st HNH CodeCamp\n\n");
+  grub_printf ("Security Mulit-Bootloader @TNTeam #1st NHN CodeCamp\n\n");
   grub_setcolorstate (GRUB_TERM_COLOR_STANDARD);
 
   grub_load_config ();
