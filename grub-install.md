@@ -128,27 +128,16 @@ The partition table has been altered!
 
 Syncing disks.
 
-14. 생성한 파티션 format
-sudo kpartx -l brdisk-img.raw
+14. 생성한 파티션을 실제 폴더에 mount
+우선 해당 가상 드라이브 이미지 파일에 대한 장치드라이버를 생성한다.
+cd ~
+sudo losetup /dev/loop0 brdisk-img.raw
 
-//----------------------
-// 출력
-//----------------------
-loop0p1 : 0 1997953 /dev/loop0 2048
-loop0p2 : 0 2194303 /dev/loop0 2000001
-loop deleted : /dev/loop0
-//----------------------
-
-sudo kpartx -a brdisk-img.raw
-sudo mkfs.ext3 /dev/mapper/loop0p1
-sudo mkfs.ext3 /dev/mapper/loop0p2
-
-# 여기서 '/dev/mapper/loop1p1'의 값은 위의 출력 loop 번호값 참고
-
+생성된 장치에 대한 boot mount 실행
 cd ~
 mkdir boot
-sudo mount /dev/mapper/loop1p1 boot
-sudo ./g2/usr/sbin/grub-install --no-floppy --boot-directory=/home/사용자계정/boot /dev/loop0
+sudo mount /dev/loop0 boot
+sudo ./g2/usr/sbin/grub-install --force --no-floppy --boot-directory=/home/bw/boot /dev/loop0
 sudo ./g2/usr/sbin/grub-mkconfig ~/boot/grub/grub.cfg
 
 15. Qemu 실행
