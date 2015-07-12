@@ -29,6 +29,7 @@
 #include <grub/command.h>
 #include <grub/reader.h>
 #include <grub/parser.h>
+#include <grub/time.h>
 
 #ifdef GRUB_MACHINE_PCBIOS
 #include <grub/machine/memory.h>
@@ -276,6 +277,9 @@ grub_main (void)
   grub_setcolorstate (GRUB_TERM_COLOR_STANDARD);
 
   grub_load_config ();
+
+  /* Sleep 3sec */
+  grub_sleep(3);
 
   grub_boot_time ("Before loading embedded modules.");
 
