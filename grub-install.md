@@ -1,4 +1,4 @@
-0. 그 어떤것 보다 ubuntu 설치후 먼저 할 것은 아래 두줄
+﻿0. 그 어떤것 보다 ubuntu 설치후 먼저 할 것은 아래 두줄
 sudo apt-get update
 sudo apt-get upgrade
 
@@ -17,31 +17,32 @@ sudo apt-get install gcc g++
 5. 컴파일러와 링커 최신버전 컴파일 설치를 위한 라이브러리 설치
 sudo apt-get install patchutils texinfo
 
-6. objconv, objdump, strip, ar, nm, ld 등의 명령어 최신버전 설치
-binutils-2.25 버전 소스 컴파일 설치
-
-7. 아래의 옵션으로 binutils 설치
-./configure --enable-64bit-bfd --disable-shared --disable-nls
-make configure-host
-make all
-sudo make install
-
-8. /usr/bin 을 최우선순위로 PATH 변수 설정
+6. /usr/bin 을 최우선순위로 PATH 변수 설정
 export PATH="/usr/bin:$PATH"
 
-9. objconv 설치
+7. Install binutils
+ 6-1. http://ftp.gnu.org/gnu/binutils/에서 binutils-2.25.tar.gz(최신버전)를 다운
+ 6-2. bintutils-2.25.tar.gz 압축 해제
+ 6-3. bintutils-2.25 디렉토리로 이동
+ 6-4. 명령어 순차적으로 입력
+  ./configure --enable-64bit-bfd --disable-shared --disable-nls
+  make configure-host
+  make all
+  sudo make install
+
+8. objconv 설치
 git clone https://github.com/vertis/objconv
 cd objconv
 g++ -o objconv -O2 src/*.cpp
 sudo cp objconv /usr/bin/objconv
 
-10. 파티션 툴 설치
+9. 파티션 툴 설치
 sudo apt-get install kpartx bxImage
 
-11. qemu 설치
+10. qemu 설치
 sudo apt-get install qemu
 
-12. grub 소스 컴파일
+11. grub 소스 컴파일
 git clone https://github.com/coreos/grub.git
 cd grub
 ./linguas.sh
@@ -50,7 +51,7 @@ cd grub
 make
 make install
 
-13. qemu 로 테스트하기 위한 가상 이미지 파일시스템 생성
+12. qemu 로 테스트하기 위한 가상 이미지 파일시스템 생성
 cd ~
 qemu-img create -f raw brdisk-img.raw 4G
 fdisk brdisk-img.raw
@@ -128,7 +129,7 @@ The partition table has been altered!
 
 Syncing disks.
 
-14. 생성한 파티션을 실제 폴더에 mount
+13. 생성한 파티션을 실제 폴더에 mount
 우선 해당 가상 드라이브 이미지 파일에 대한 장치드라이버를 생성한다.
 cd ~
 sudo losetup /dev/loop0 brdisk-img.raw
@@ -140,6 +141,6 @@ sudo mount /dev/loop0 boot
 sudo ./g2/usr/sbin/grub-install --force --no-floppy --boot-directory=/home/bw/boot /dev/loop0
 sudo ./g2/usr/sbin/grub-mkconfig ~/boot/grub/grub.cfg
 
-15. Qemu 실행
+14. Qemu 실행
 cd ~
 qemu-system-i386 brdisk-img.raw -serial stdio
