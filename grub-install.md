@@ -24,7 +24,8 @@
 
 **7. /usr/bin 을 최우선순위로 PATH 변수 설정(매우 중요)**
 > export PATH="/usr/bin:$PATH"
-> 참고 : ./configure .... install 했을때 error gcc and g++ 관련 오류시 위에 명령어 입력하면 오류 해결가능!!
+>
+참고 : ./configure .... install 했을때 error gcc and g++ 관련 오류시 위에 명령어 입력하면 오류 해결가능!!
 
 **8. Install binutils**
 > **Install binutils-2.25.tar.gz :**
