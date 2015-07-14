@@ -62,7 +62,7 @@ This tool, derived from util-linux’ partx, reads partition tables on specified
 **11. qemu 설치**
 > sudo apt-get install qemu
 
-**12. Clone grub **
+**12. Clone grub**
 >	git clone https://github.com/coreos/grub.git
 
 **13. grub 소스 컴파일**
@@ -81,47 +81,47 @@ This tool, derived from util-linux’ partx, reads partition tables on specified
 > 
 > **실행중 입력값 들**
 >- Device contains neither a valid DOS partition table, nor Sun, SGI or OSF disklabel
-Building a new DOS disklabel with disk identifier 0xc65f2bd8.
-Changes will remain in memory only, until you decide to write them.
-After that, of course, the previous content wont be recoverable.
-Warning: invalid flag 0x0000 of partition table 4 will be corrected by w(rite)
-Command (m for help): x
-Expert command (m for help): c
-Number of cylinders (1-1048576, default 261): 406
-Expert command (m for help): h
-Number of heads (1-256, default 255): 16
-Expert command (m for help): s
-Number of sectors (1-63, default 63): 63
-Expert command (m for help): r
-Command (m for help): p
-Disk brdisk-img.raw: 2147 MB, 2147483648 bytes
-1 heads, 16 sectors/track, 262144 cylinders, total 4194304 sectors
-Units = sectors of 1 * 512 = 512 bytes
-Sector size (logical/physical): 512 bytes / 512 bytes
-I/O size (minimum/optimal): 512 bytes / 512 bytes
-Disk identifier: 0xc65f2bd8
-Device Boot      Start         End      Blocks   Id  System
-Command (m for help): n
-Partition type:
-   p   primary (0 primary, 0 extended, 4 free)
-   e   extended
-Select (default p): p
-Partition number (1-4, default 1): 1
-First sector (2048-4194303, default 2048): 
-Using default value 2048
-Last sector, +sectors or +size{K,M,G} (2048-4194303, default 4194303): 2000000            
-Command (m for help): p
-Disk brdisk-img.raw: 2147 MB, 2147483648 bytes
-1 heads, 16 sectors/track, 262144 cylinders, total 4194304 sectors
-Units = sectors of 1 * 512 = 512 bytes
-Sector size (logical/physical): 512 bytes / 512 bytes
-I/O size (minimum/optimal): 512 bytes / 512 bytes
-Disk identifier: 0xc65f2bd8
-Device Boot      Start         End      Blocks   Id  System
-brdisk-img.raw1            2048     4194303      !@#!!@+  83  Linux
-Command (m for help): w
-The partition table has been altered!
-Syncing disks.
+> Building a new DOS disklabel with disk identifier 0xc65f2bd8.
+> Changes will remain in memory only, until you decide to write them.
+> After that, of course, the previous content wont be recoverable.
+> Warning: invalid flag 0x0000 of partition table 4 will be corrected by w(rite)
+> Command (m for help): x
+> Expert command (m for help): c
+> Number of cylinders (1-1048576, default 261): 406
+> Expert command (m for help): h
+> Number of heads (1-256, default 255): 16
+> Expert command (m for help): s
+> Number of sectors (1-63, default 63): 63
+> Expert command (m for help): r
+> Command (m for help): p
+> Disk brdisk-img.raw: 2147 MB, 2147483648 bytes
+> 1 heads, 16 sectors/track, 262144 cylinders, total 4194304 sectors
+> Units = sectors of 1 * 512 = 512 bytes
+> Sector size (logical/physical): 512 bytes / 512 bytes
+> I/O size (minimum/optimal): 512 bytes / 512 bytes
+> Disk identifier: 0xc65f2bd8
+> Device Boot      Start         End      Blocks   Id  System
+> Command (m for help): n
+> Partition type:
+>    p   primary (0 primary, 0 extended, 4 free)
+>    e   extended
+> Select (default p): p
+> Partition number (1-4, default 1): 1
+> First sector (2048-4194303, default 2048): 
+> Using default value 2048
+> Last sector, +sectors or +size{K,M,G} (2048-4194303, default 4194303): 2000000            
+> Command (m for help): p
+> Disk brdisk-img.raw: 2147 MB, 2147483648 bytes
+> 1 heads, 16 sectors/track, 262144 cylinders, total 4194304 sectors
+> Units = sectors of 1 * 512 = 512 bytes
+> Sector size (logical/physical): 512 bytes / 512 bytes
+> I/O size (minimum/optimal): 512 bytes / 512 bytes
+> Disk identifier: 0xc65f2bd8
+> Device Boot      Start         End      Blocks   Id  System
+> brdisk-img.raw1            2048     4194303      !@#!!@+  83  Linux
+> Command (m for help): w
+> The partition table has been altered!
+> Syncing disks.
 
 **15. 생성한 파티션을 실제 폴더에 mount 우선 해당 가상 드라이브 이미지 파일에 대한 장치드라이버를 생성한다.**
 > cd ~
