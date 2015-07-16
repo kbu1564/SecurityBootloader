@@ -195,6 +195,11 @@ command-line or ESC to discard edits and return to the GRUB menu."),
 	     STANDARD_MARGIN, STANDARD_MARGIN, term, dry_run);
 	}	
     }
+
+  ret += grub_print_message_indented_real
+    (_("=============== Modify by TNTeam ==============="),
+    STANDARD_MARGIN, STANDARD_MARGIN, term, dry_run);
+
   return ret;
 }
 
