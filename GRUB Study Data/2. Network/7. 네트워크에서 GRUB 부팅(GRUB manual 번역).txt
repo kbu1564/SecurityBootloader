@@ -1,0 +1,71 @@
+#7. 네트워크에서 GRUB 부팅
+
+####*사전 부팅 실행 환경 (PXE)를 구할 경우 다음 지침은 PC의 BIOS 시스템에서 작동합니다.*
+
+□ 부팅 이미지를 생성하려면, 다음 명령어를 실행
+```
+grub-mkimage --format=i386-pc-pxe --output=grub.pxe --prefix='(pxe)/boot/grub' pxe pxecmd
+```
+
+□ the PXE (TFTP) server로  grub.pxe, /boot/grub/*.mod, 및 /boot/grub/*.lst를 복사합니다.
+( .mod와 *.lst는 TFTP server root에서 /boot/grub/경로를 경유하여 접근 할 수 있습니다.)
+
+□ 부트파일(ISC dhcpd 내의 'filename' 옵션)로 grub.pxe를 제공하기 위해 DHCP 서버 구성을 설정합
+
+니다. 
+
+□ 당신은 이미지와 GRUB 디렉토리 트리를 생성하기 위해 주위에 수동으로 파일을 복사하지 않고,  'grub-mknetdir' 유틸리티를 사용 할 수 있습니다.
+
+□ GRUB이 시작되면, TFTP 서버 파일들은 '(PXE)'장치를 경유하여 접근 할 것입니다.
+
+□ 그 서버와 게이트웨이 IP주소는 '(pxe:server-ip)' 또는 '(pxe:server-ip:gateway-ip)'의 '(pxe)' 장치 이름을 변경함으로서 제어 할 수 있습니다. 또한 접두사와 구성파일의 장치명에 대한 참조를 변경 시켜야 함에 주의해야 합니다
+
+--------------------------------------------------------------------------------------------------
+####*GRUB 열람 또는 PXE 장치의 동작을 변경하는 데 사용될 수있는 여러 환경 변수를 제공합니다.*
+
+**■ 이 컴퓨터의 IP 주소입니다. 읽기 전용입니다**
+```
+net_pxe_ip’
+```
+
+**■ 네트워크 인터페이스의 MAC 주소. 읽기 전용입니다.**
+```
+net_pxe_mac’
+```
+
+**■ DHCP가 제공 한 클라이언트 호스트 이름. 읽기 전용입니다.**
+```
+‘net_pxe_hostname’
+```
+
+**■ DHCP를 제공하는 클라이언트의 도메인 이름입니다. 읽기 전용입니다.**
+```
+‘net_pxe_domain’
+```
+
+**■ DHCP가 제공 한 클라이언트의 루트 디스크의 경로입니다. 읽기 전용입니다.**
+```
+‘net_pxe_rootpath’
+```
+
+**■ DHCP에서 제공하는 추가 DHCP 공급 업체 확장의 경로. 읽기 전용입니다.**
+```
+‘net_pxe_extensionspath’
+```
+
+**■ DHCP가 제공 한 부트 파일 이름입니다. 읽기 전용입니다.**
+```
+‘net_pxe_boot_file’
+```
+
+**■ 이 부트 매개 변수에 대한 책임이있는 DHCP 서버의 이름입니다. 읽기 전용입니다.**
+```
+‘net_pxe_dhcp_server_name’
+```
+
+**■ 기본 서버. Read-write, 설정하더라도, 이는 네트워크 장치를 열기 전에만 유용하다.**
+```
+‘net_default_server’
+```
+--------------------------------------------------------------------------------------------------
+**참조 링크 :  ** [GNU GRUB Manual :: 7 Booting GRUB from the network](https://www.gnu.org/software/grub/manual/html_node/Network.html)
