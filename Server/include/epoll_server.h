@@ -3,9 +3,17 @@
 
 class EpollServer
 {
+private:
+	enum Config {
+		MAX_EVENTS = 64,
+		MAX_BUFFER_SIZE = 512
+	};
 protected:
 	int mPort;
     int mSfd;
+
+	epoll_event mEvents[MAX_EVENTS];
+
 public:
 	EpollServer();
 	~EpollServer();
@@ -13,7 +21,12 @@ public:
 	int open(const int port);
 	int shutdown();
 	int setOpts();
+	int listen();
 	int loop();
+
+protected:
+	int _epoll_init(const int epollsize);
+
 private:
 	EpollServer(const EpollServer& es);
 	EpollServer& operator=(const EpollServer& es);
