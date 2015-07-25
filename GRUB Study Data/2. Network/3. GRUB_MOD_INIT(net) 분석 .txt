@@ -1,0 +1,42 @@
+용어
+--------------------------------------------------------------------
+**EFI(Extensible Firmware Interface)**
+```
+▶ 운영체제와 플랫폼 펌웨어 사이의 소프트웨어 인터페이스를 정의하는 규격
+
+▶ EFI는 기존의 바이오스보다 더 유연한 원격 네트워크 부팅을 지원한다. 이는 보안 면에서는 취약점으로 작용할 수도 있다
+```
+<br/>
+**PXE(Pre-boot eXecution Environment)**
+```
+▶ PXE(Pre-boot eXecution Environment)는 네트워크 인터페이스를 통해 컴퓨터를 부팅할 수 있게 해주는 환경이다.
+
+▶ PXE 환경을 이용해서 부팅을 하기 위해서는 다음과 같은 구성요소가 필요하다
+
+	PXE 서버 
+		부트 이미지 파일을 포함한 설정정보 교환. 
+			예) 3com Boot Service(Symantec Ghost Solution Suite 에 포함)
+	TFTP 서버
+			예) 3com Boot Service(Symantec Ghost Solution Suite 에 포함)
+	PXE 클라이언트
+		PXE 지원 네트워크 카드 필요(2000년 이후 출시된 제품에는 대부분 장착)
+```
+
+[grub_net_network_level_netaddress_t](https://github.com/kbu1564/SecurityBootloader/blob/develop/grub/grub-core/net/net.c#L178)
+
+```
+grub_network_level_protocol_id_t type;
+  union
+  {
+    struct {
+      grub_uint32_t base;
+      int masksize; 
+    } ipv4;
+    struct {
+      grub_uint64_t base[2];
+      int masksize; 
+    } ipv6;
+  };
+```
+
+[GRUB_MOD_INIT(net)](https://github.com/kbu1564/SecurityBootloader/blob/1ca1a01546c9cf024781a1bc7ee3e6ba0f9eb4c9/grub/grub-core/net/net.c#L1711) -> [grub_register_command("net_add_addr", grub_cmd_addaddr, N_("SHORTNAME CARD ADDRESS [HWADDRESS]"), N_("Add a network address."));](https://github.com/kbu1564/SecurityBootloader/blob/1ca1a01546c9cf024781a1bc7ee3e6ba0f9eb4c9/grub/grub-core/net/net.c#L1726) -> [grub_cmd_addaddr ](https://github.com/kbu1564/SecurityBootloader/blob/1ca1a01546c9cf024781a1bc7ee3e6ba0f9eb4c9/grub/grub-core/net/net.c#L1019) -> [grub_net_add_ipv4_local ](https://github.com/kbu1564/SecurityBootloader/blob/1ca1a01546c9cf024781a1bc7ee3e6ba0f9eb4c9/grub/grub-core/net/net.c#L972) -> [grub_net_route_register ](https://github.com/kbu1564/SecurityBootloader/search?utf8=%E2%9C%93&q=grub_net_route_register+&type=Code#L412)
