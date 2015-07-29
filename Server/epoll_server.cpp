@@ -185,7 +185,7 @@ int EpollServer::loop()
                     }
 
                     // accept handler
-                    this->accept(event, hbuf, sbuf);
+                    this->mHandler->accept(event, hbuf, sbuf);
                 }
             } else if (current_event.events & EPOLLIN) {
                 // read data
@@ -193,13 +193,13 @@ int EpollServer::loop()
                 int nread = read(current_event.data.fd, buf, MAX_BUFFER_SIZE);
                 if (nread < 1) {
                     // closed connection on descriptor
-                    this->disconnect(current_event);
+                    this->mHandler->disconnect(current_event);
                 } else {
                     // NULL value setting
                     if (nread < MAX_BUFFER_SIZE) buf[nread] = 0;
 
                     // recv event!!
-                    this->recv(current_event, buf, nread);
+                    this->mHandler->recv(current_event, buf, nread);
                 }
             } else if (current_event.events & EPOLLOUT) {
                 // write event!!
