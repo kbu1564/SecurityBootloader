@@ -81,19 +81,19 @@ int EpollServer::shutdown()
  */
 int EpollServer::setOpts()
 {
-	int flags, s;
-	flags = fcntl(this->mSfd, FGETFL, 0);
-	if (flags == -1) {
-		this->__reporting("fcntl", "none-blocking socket option getting error");
-		return -1;
-	}
+    int flags, s;
+    flags = fcntl(this->mSfd, FGETFL, 0);
+    if (flags == -1) {
+        this->__reporting("fcntl", "none-blocking socket option getting error");
+        return -1;
+    }
 
-	flags |= O_NONBLOCK;
-	s = fcntl(this->mSfd, F_SETFL, flags);
-	if (s == -1) {
-		this->__reporting("1:fcntl", "none-blocking socket change error");
-		return -1;
-	}
+    flags |= O_NONBLOCK;
+    s = fcntl(this->mSfd, F_SETFL, flags);
+    if (s == -1) {
+        this->__reporting("1:fcntl", "none-blocking socket change error");
+        return -1;
+    }
     return E_OK;
 }
 /**
@@ -101,8 +101,8 @@ int EpollServer::setOpts()
  */
 int EpollServer::listen()
 {
-	int ret = listen(this->mSfd, SOMAXCONN);
-	return E_OK;
+    int ret = listen(this->mSfd, SOMAXCONN);
+    return E_OK;
 }
 
 /**
@@ -110,7 +110,22 @@ int EpollServer::listen()
  */
 int EpollServer::_epoll_init(const int epollsize)
 {
-	return E_OK;
+	int retval = 0;
+    int epfd = epoll_create(epollsize);
+    if (epfd == -1) {
+        this->__reporting("epoll_create", "can't create epoll events");
+		return -1;
+    }
+
+    epoll_event event;
+    event.data.fd = this->mSfd;
+    event.events  = EPOLLIN | EPOLLET;
+    retval = epoll_ctl(epfd, EPOLL_CTL_ADD, this->mSfd, &event);
+    if (retval == -1) {
+        this->__reporting("epoll_ctl", "can't create epoll events");
+        return -1;
+    }
+    return E_OK;
 }
 
 /**
