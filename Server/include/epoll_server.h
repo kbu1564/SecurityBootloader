@@ -4,32 +4,35 @@
 class EpollServer
 {
 private:
-	enum Config {
-		MAX_EVENTS = 64,
-		MAX_BUFFER_SIZE = 512
-	};
+    enum Config {
+        MAX_EVENTS = 64,
+        MAX_BUFFER_SIZE = 512
+    };
 protected:
-	int mPort;
+    int mPort;
     int mSfd;
+    int mEpfd;
 
-	epoll_event mEvents[MAX_EVENTS];
+    epoll_event mEvents[MAX_EVENTS];
+
+    ServerHandler* mHandler;
 
 public:
-	EpollServer();
-	~EpollServer();
+    EpollServer(ServerHandler* handler);
+    ~EpollServer();
 
-	int open(const int port);
-	int shutdown();
-	int setOpts();
-	int listen();
-	int loop();
+    int open(const int port);
+    int shutdown();
+    int setOpts();
+    int listen();
+    int loop();
 
 protected:
-	int _epoll_init(const int epollsize);
+    int _epoll_init(const int epollsize);
 
 private:
-	EpollServer(const EpollServer& es);
-	EpollServer& operator=(const EpollServer& es);
+    EpollServer(const EpollServer& es);
+    EpollServer& operator=(const EpollServer& es);
 
     void __reporting(char* funcname, int retval) const;
 };
