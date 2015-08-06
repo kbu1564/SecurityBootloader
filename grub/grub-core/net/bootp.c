@@ -309,9 +309,14 @@ grub_cmd_dhcpopt (struct grub_command *cmd __attribute__ ((unused)),
     return grub_error (GRUB_ERR_BAD_ARGUMENT,
 		       N_("four arguments expected"));
 
+  grub_printf("interface check : %s\n", N_(args[1]));
+
   FOR_NET_NETWORK_LEVEL_INTERFACES (inter)
+  {
+    grub_printf("interface name : %s\n", N_(inter->name));
     if (grub_strcmp (inter->name, args[1]) == 0)
       break;
+  }
 
   if (!inter)
     return grub_error (GRUB_ERR_BAD_ARGUMENT,

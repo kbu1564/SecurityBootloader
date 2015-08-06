@@ -1710,6 +1710,8 @@ static grub_command_t cmd_lsaddr, cmd_slaac;
 
 GRUB_MOD_INIT(net)
 {
+//  grub_printf (_("grub net moudle init!!\n"));
+
   grub_register_variable_hook ("net_default_server", defserver_get_env,
 			       defserver_set_env);
   grub_env_export ("net_default_server");

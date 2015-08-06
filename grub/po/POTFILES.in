@@ -1,3 +1,4 @@
+./config.h
 ./grub-core/boot/decompressor/minilib.c
 ./grub-core/boot/decompressor/none.c
 ./grub-core/boot/decompressor/xz.c
@@ -305,6 +306,7 @@
 ./grub-core/gnulib/regexec.c
 ./grub-core/gnulib/size_max.h
 ./grub-core/gnulib/sleep.c
+./grub-core/gnulib/stdalign.h
 ./grub-core/gnulib/stdalign.in.h
 ./grub-core/gnulib/stdbool.in.h
 ./grub-core/gnulib/stddef.in.h

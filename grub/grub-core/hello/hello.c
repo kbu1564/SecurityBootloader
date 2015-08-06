@@ -17,12 +17,25 @@
  *  You should have received a copy of the GNU General Public License
  *  along with GRUB.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include <grub/net.h>
+#include <grub/net/netbuff.h>
+#include <grub/time.h>
+#include <grub/file.h>
+#include <grub/i18n.h>
+#include <grub/mm.h>
+#include <grub/misc.h>
+#include <grub/dl.h>
+#include <grub/command.h>
+#include <grub/env.h>
+#include <grub/net/ethernet.h>
+#include <grub/net/arp.h>
+#include <grub/net/ip.h>
+#include <grub/loader.h>
+#include <grub/bufio.h>
+#include <grub/kernel.h>
 
 #include <grub/types.h>
-#include <grub/misc.h>
-#include <grub/mm.h>
 #include <grub/err.h>
-#include <grub/dl.h>
 #include <grub/extcmd.h>
 #include <grub/i18n.h>
 
@@ -33,7 +46,15 @@ grub_cmd_hello (grub_extcmd_context_t ctxt __attribute__ ((unused)),
 		int argc __attribute__ ((unused)),
 		char **args __attribute__ ((unused)))
 {
-  grub_printf ("%s\n", _("Hello World"));
+  grub_printf ("%s\n", _("Get Network Card Lists"));
+
+  struct grub_net_card *card;
+  FOR_NET_CARDS(card)
+  {
+    char buf[GRUB_NET_MAX_STR_HWADDR_LEN];
+    grub_net_hwaddr_to_str (&card->default_address, buf);
+    grub_printf ("%s %s\n", card->name, buf);
+  }
   return 0;
 }
 
@@ -41,8 +62,7 @@ static grub_extcmd_t cmd;
 
 GRUB_MOD_INIT(hello)
 {
-  cmd = grub_register_extcmd ("hello", grub_cmd_hello, 0, 0,
-			      N_("Say `Hello World'."), 0);
+  cmd = grub_register_extcmd ("hello", grub_cmd_hello, 0, 0, N_("Extension Network Test Command!"), 0);
 }
 
 GRUB_MOD_FINI(hello)

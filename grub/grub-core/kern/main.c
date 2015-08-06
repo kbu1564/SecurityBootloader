@@ -279,7 +279,7 @@ grub_main (void)
   grub_load_config ();
 
   /* Sleep 3sec */
-  grub_sleep(3);
+  grub_sleep(1);
 
   grub_boot_time ("Before loading embedded modules.");
 
