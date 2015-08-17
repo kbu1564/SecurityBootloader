@@ -1,5 +1,5 @@
-#include "include/global.h"
-#include "include/protocol.h"
+#include "include/Global.h"
+#include "include/Protocol.h"
 
 int main(int argc, char* argv[])
 {
