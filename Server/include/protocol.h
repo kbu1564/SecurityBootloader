@@ -6,13 +6,13 @@ enum Protocol
 	/**
 	 * 프로토콜의 시작
 	 */
-	START_PROTOCOL = 1000,
+	START_PROTOCOL = 0x10000000,
 
 	/**
 	 * 프로토콜의 끝
 	 * 이 이상의 값은 존재치 않음
 	 */
-	END_PROTOCOL,
+	END_PROTOCOL
 };
 
 #endif
