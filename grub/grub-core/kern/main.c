@@ -225,17 +225,31 @@ grub_set_prefix_and_root (void)
 
 /* Load the normal mode module and execute the normal mode if possible.  */
 static void
-grub_load_normal_mode (void)
+grub_load_hello_mode (void)
 {
   /* Load the module.  */
-  grub_dl_load ("normal");
+  grub_dl_load ("hello");
 
   /* Print errors if any.  */
   grub_print_error ();
   grub_errno = 0;
 
+  grub_command_execute ("hello", 0, 0);
+}
+
+/* Load the normal mode module and execute the normal mode if possible.  */
+/*
+static void
+grub_load_normal_mode (void)
+{
+  grub_dl_load ("normal");
+
+  grub_print_error ();
+  grub_errno = 0;
+
   grub_command_execute ("normal", 0, 0);
 }
+*/
 
 static void
 reclaim_module_space (void)
@@ -312,6 +326,7 @@ grub_main (void)
 
   grub_boot_time ("After execution of embedded config. Attempt to go to normal mode");
 
-  grub_load_normal_mode ();
+  //grub_load_normal_mode ();
+  grub_load_hello_mode();
   grub_rescue_run ();
 }

@@ -256,6 +256,7 @@ read_lists_hook (struct grub_env_var *var __attribute__ ((unused)),
 }
 
 /* Wait GRUB Network Boot */
+/*
 static void
 grub_network_boot_wait (void)
 {
@@ -279,13 +280,14 @@ grub_network_boot_wait (void)
 
   grub_cls ();
 }
+*/
 
 /* Read the config file CONFIG and execute the menu interface or
    the command line interface if BATCH is false.  */
 void
 grub_normal_execute (const char *config, int nested, int batch)
 {
-  grub_network_boot_wait();
+  //grub_network_boot_wait();
 
   grub_menu_t menu = 0;
   const char *prefix;
