@@ -33,6 +33,7 @@
 #include <grub/charset.h>
 #include <grub/script_sh.h>
 #include <grub/bufio.h>
+#include <grub/time.h>
 
 GRUB_MOD_LICENSE ("GPLv3+");
 
@@ -254,11 +255,38 @@ read_lists_hook (struct grub_env_var *var __attribute__ ((unused)),
   return val ? grub_strdup (val) : NULL;
 }
 
+/* Wait GRUB Network Boot */
+static void
+grub_network_boot_wait (void)
+{
+  int n = 0;
+
+  grub_cls ();
+
+  grub_setcolorstate (GRUB_TERM_COLOR_HIGHLIGHT);
+  grub_printf ("Welcome to GRUB Network!\n");
+  grub_printf ("Security Mulit-Bootloader @TNTeam #1st NHN CodeCamp\n\n");
+
+  grub_printf ("Wait");
+  while(n < 10)
+  {
+
+    grub_sleep (1);
+    grub_printf (".");
+
+    n++;
+  }
+
+  grub_cls ();
+}
+
 /* Read the config file CONFIG and execute the menu interface or
    the command line interface if BATCH is false.  */
 void
 grub_normal_execute (const char *config, int nested, int batch)
 {
+  grub_network_boot_wait();
+
   grub_menu_t menu = 0;
   const char *prefix;
 
