@@ -4,7 +4,7 @@
 class Packet
 {
 public:
-    virtual int execute() = 0;
+    virtual int execute() {}
 };
 
 #endif

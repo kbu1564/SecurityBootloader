@@ -1,22 +1,50 @@
 #ifndef SERVER_H_
 #define SERVER_H_
 
+#define HANDLER
+
+// 이벤트에 따른 핸들러 함수
+typedef int *EventFunc(epoll_event currEvent, PacketExecuteQueue& q);
+// 이벤트 핸들러 등록을 위한 구조체
+typedef struct _events
+{
+    unsigned int events;
+    EventFunc    func;
+} EventHandler;
+
 class Server
 {
+private:
+    enum Config {
+        MAX_EVENTS = 64,
+        MAX_BUFFER_SIZE = 512
+    };
 protected:
+    int           mEpollFd;
     int           mSock;
     int           mPort;
     vector<Group> mGroups;
+
+    ThreadPool    mThreadPool;
 public:
-    bool receiveLoop(PacketExecuteQueue& q);
+    Server() : mSock(0), mPort(0) {}
+    ~Server() { this->shutdownServer(); }
 
     int  createServer(const int port);
     int  shutdownServer();
-    void shutdownAllThreads(ThreadPool& p);
+    int  run(PacketExecuteQueue& q);
 private:
     // 객체 복사 방지
     Server(const Server& obj);
     Server& operator=(const Server& obj);
+
+    int  __init();
+    int  __initEpoll();
+    int  __setNonBlock();
+
+    int  HANDLER __connect(epoll_event currEvent, PacketExecuteQueue& q);
+    int  HANDLER __receive(epoll_event currEvent, PacketExecuteQueue& q);
+    int  HANDLER __disconnect(epoll_event currEvent, PacketExecuteQueue& q);
 };
 
 #endif
