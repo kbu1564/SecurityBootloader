@@ -1,8 +1,11 @@
 #include "Global.h"
 #include "ThreadPool.h"
 
+#include "Device.h"
+#include "Group.h"
 #include "Protocol.h"
 #include "Packet.h"
+#include "PacketParser.h"
 #include "PacketExecuteQueue.h"
 #include "Server.h"
 
