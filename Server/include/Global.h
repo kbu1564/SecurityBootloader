@@ -8,12 +8,15 @@
 #include <string>
 #include <cstdio>
 #include <vector>
+
+#include <map>
+#include <pthread.h>
 using namespace std;
 
 /**
  * 리눅스 네트워크 통신 공용 라이브러리 포함 부분
  */
-#include <sys/epoll.h>
+#include <sys/socket.h>
 #include <fcntl.h>
 #include <netdb.h>
 #include <errno.h>
