@@ -14,7 +14,7 @@ private:
     int    mRear;
 
     // Private Function
-    bool isEmpty()
+    bool __isEmpty()
     {
         if (this->mFront == this->mRear)
             return true;
@@ -22,7 +22,7 @@ private:
         return false;
     }
 
-    int getNextIndex(int index)
+    int __getNextIndex(int index)
     {
         return index % SIZE;   
     }
@@ -38,11 +38,11 @@ public:
 
     int push(Packet p)
     {
-        if (getNextIndex(this->mRear) == this->mFront)
+        if (this->__getNextIndex(this->mRear) == this->mFront)
             return -1;
                 
-        this->mRear = getNextIndex(this->mRear);
-        mPacketDataList[this->mRear] = p;
+        this->mRear = this->__getNextIndex(this->mRear);
+        this->mPacketDataList[this->mRear] = p;
         
         return 0;
     }
@@ -50,12 +50,12 @@ public:
     int  popExecute()
     {
         // Not exist packet
-        if (isEmpty()) 
+        if (this->__isEmpty()) 
             return -1;
         
         // Execute packet execute function
-        Packet p = mPacketDataList[this->mFront];
-        this->mFront = getNextIndex(this->mFront);   
+        Packet p = this->mPacketDataList[this->mFront];
+        this->mFront = this->__getNextIndex(this->mFront);   
 
         p.execute(); 
     
