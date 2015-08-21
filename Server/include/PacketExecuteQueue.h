@@ -16,7 +16,7 @@ private:
     // Private Function
     bool isEmpty()
     {
-        if (mFront == mRear)
+        if (this->mFront == this->mRear)
             return true;
         
         return false;
@@ -24,10 +24,7 @@ private:
 
     int getNextIndex(int index)
     {
-        if (index == SIZE-1)
-            return 0;
-        
-        return index+1;   
+        return index % SIZE;   
     }
 
 public:
@@ -37,18 +34,15 @@ public:
         this->mRear = 0;
     }
 
-    ~PacketExecuteQueue() 
-    {
-        delete mPacketDataList;
-    }
+    ~PacketExecuteQueue() {}
 
     int push(Packet p)
     {
-        if (getNextIndex(mRear) == mFront)
+        if (getNextIndex(this->mRear) == this->mFront)
             return -1;
                 
-        mRear = getNextIndex(mRear);
-        mPacketDataList[mRear] = p;
+        this->mRear = getNextIndex(this->mRear);
+        mPacketDataList[this->mRear] = p;
         
         return 0;
     }
@@ -60,8 +54,8 @@ public:
             return -1;
         
         // Execute packet execute function
-        Packet p = mPacketDataList[mFront];
-        mFront = getNextIndex(mFront);   
+        Packet p = mPacketDataList[this->mFront];
+        this->mFront = getNextIndex(this->mFront);   
 
         p.execute(); 
     
