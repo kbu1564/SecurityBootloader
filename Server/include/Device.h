@@ -12,12 +12,12 @@ protected:
     int   mPort;
     char* mMacAddr;
 
-    DeviceType mType;
+    int   mType;
 public:
-    Device(DeviceType type): mType(type) {}
-    virtual ~Device();
+    Device() {}
+    virtual ~Device() {}
 
-    virtual int send(Packet& p) = 0;
+    virtual int send(Packet& p) {}
 };
 
 #endif

@@ -3,12 +3,14 @@
 
 #define HANDLER
 
+class Server;
+
 // 이벤트에 따른 핸들러 함수
-typedef int *EventFunc(epoll_event currEvent, PacketExecuteQueue& q);
+typedef int (Server::*EventFunc)(epoll_event currEvent, PacketExecuteQueue& q);
 // 이벤트 핸들러 등록을 위한 구조체
 typedef struct _events
 {
-    unsigned int events;
+    int          events;
     EventFunc    func;
 } EventHandler;
 
@@ -24,6 +26,7 @@ protected:
     int           mSock;
     int           mPort;
     vector<Group> mGroups;
+    epoll_event   mEvents[MAX_EVENTS];
 
     ThreadPool    mThreadPool;
 public:
@@ -32,7 +35,7 @@ public:
 
     int  createServer(const int port);
     int  shutdownServer();
-    int  run(PacketExecuteQueue& q);
+    bool run(PacketExecuteQueue& q);
 private:
     // 객체 복사 방지
     Server(const Server& obj);
@@ -40,7 +43,7 @@ private:
 
     int  __init();
     int  __initEpoll();
-    int  __setNonBlock();
+    int  __setNonBlock(int sock);
 
     int  HANDLER __connect(epoll_event currEvent, PacketExecuteQueue& q);
     int  HANDLER __receive(epoll_event currEvent, PacketExecuteQueue& q);

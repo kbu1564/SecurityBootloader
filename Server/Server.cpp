@@ -2,9 +2,11 @@
 #include "ThreadPool.h"
 
 #include "Protocol.h"
-#include "Group.h"
+#include "Packet.h"
 #include "PacketExecuteQueue.h"
 #include "PacketParser.h"
+#include "Device.h"
+#include "Group.h"
 #include "Server.h"
 
 // 서버 실행
@@ -12,32 +14,29 @@
 bool Server::run(PacketExecuteQueue& q)
 {
     EventHandler handler[] = {
-        { NULL,       this->__connect    },
-        { EPOLLERR,   this->__disconnect },
-        { EPOLLHUP,   this->__disconnect },
-        { EPOLLRDHUP, this->__disconnect },
-        { EPOLLIN,    this->__receive    },
+        { 0,          &Server::__connect    },
+        { EPOLLERR,   &Server::__disconnect },
+        { EPOLLHUP,   &Server::__disconnect },
+        { EPOLLRDHUP, &Server::__disconnect },
+        { EPOLLIN,    &Server::__receive    },
     };
     int handlerSize = sizeof(handler) / sizeof(handler[0]);
 
     int retval;
     epoll_event event, currEvent;
-    epoll_event events[MAX_EVENTS];
 
-    int n = epoll_wait(this->mEpollFd, events, MAX_EVENTS, -1);
+    int n = epoll_wait(this->mEpollFd, mEvents, MAX_EVENTS, -1);
     for (int i = 0; i < n; i++) {
-        currEvent = events[i];
+        currEvent = mEvents[i];
         // 클라이언트 접속이 감지된 경우가 아니고서는 핸들러 구조체 체크
-        if (currEvent.data.fd == this->mSock)
-            handler[0].handler(currEvent, q);
-        else {
+        if (currEvent.data.fd != this->mSock) {
             // 이벤트 발생여부 체크를 위한 변수
             bool isEvents = false;
             // 0 번째 인덱스는 클라이언트 접속 허용을 위해 사용되므로
             // 1 번째 인덱스 부터 시작된다.
             for (int j = 1; j < handlerSize; j++) {
                 if (currEvent.events & handler[j].events) {
-                    if (handler[j].func(currEvent, q) == 0)
+                    if ((this->*handler[j].func)(currEvent, q) == 0)
                         isEvents = true;
                     break;
                 }
@@ -46,6 +45,8 @@ bool Server::run(PacketExecuteQueue& q)
             // 핸들러에 등록되지 않은 이벤트의 경우 클라이언트 종료를 호출
             if (isEvents == false)
                 this->__disconnect(currEvent, q);
+        } else {
+            (this->*handler[0].func)(currEvent, q);
         }
     }
     return true;
@@ -57,7 +58,8 @@ int Server::createServer(const int port)
     this->mPort = port;
 
     this->__init();
-    this->__setNonBlock();
+    this->__setNonBlock(this->mSock);
+    listen(this->mSock, SOMAXCONN);
     this->__initEpoll();
 
     return 0;
@@ -86,18 +88,22 @@ int Server::__init()
 
     char portStr[6] = { 0, };
     sprintf(portStr, "%d", this->mPort);
-    retval = getaddrinfo(NULL, port, &hints, &result);
+    retval = getaddrinfo(NULL, portStr, &hints, &result);
 
     this->mSock = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
     if (this->mSock == -1)
+        return -1;
+
+    int flag = 1;
+    retval = setsockopt(this->mSock, SOL_SOCKET, SO_REUSEADDR, &flag, sizeof(int));
+    if (retval == -1)
         return -1;
 
     retval = bind(this->mSock, result->ai_addr, result->ai_addrlen);
     if (retval == -1)
         return -1;
 
-    listen(this->mSock, LISTEN_BACKLOG);
-
+    freeaddrinfo(result);
     return 0;
 }
 
@@ -109,7 +115,7 @@ int Server::__initEpoll()
     this->mEpollFd = epoll_create(EPOLL_SIZE);
     
     epoll_event event;
-    event.data.fd = this->mEpollFd;
+    event.data.fd = this->mSock;
     event.events = EPOLLIN | EPOLLET;
     int retval = epoll_ctl(this->mEpollFd, EPOLL_CTL_ADD, this->mSock, &event);
     if (retval == -1)
@@ -119,15 +125,15 @@ int Server::__initEpoll()
 }
 
 // Non-Block Socket을 위한 옵션 셋팅
-int Server::__setNonBlock()
+int Server::__setNonBlock(int sock)
 {
     int flags, s;
-    flags = fcntl(this->mSock, FGETFL, 0);
+    flags = fcntl(sock, F_GETFL, 0);
     if (flags == -1)
         return -1;
 
     flags |= O_NONBLOCK;
-    s = fcntl(this->mSock, F_SETFL, flags);
+    s = fcntl(sock, F_SETFL, flags);
     if (s == -1)
         return -1;
 
@@ -143,13 +149,15 @@ int HANDLER Server::__connect(epoll_event currEvent, PacketExecuteQueue& q)
         int infd;
         char hbuf[NI_MAXHOST], sbuf[NI_MAXSERV];
 
-        infd = accept4(this->mSock, &inAddr, &inLen, SOCK_NONBLOCK, SOCK_CLOEXEC);
+        infd = accept4(this->mSock, &inAddr, &inLen, SOCK_NONBLOCK | SOCK_CLOEXEC);
         if (infd == -1) {
             if (errno == EAGAIN || errno == EWOULDBLOCK)
                 break;
             else
                 return -1;
         }
+
+        this->__setNonBlock(infd);
 
         int retval;
         retval = getnameinfo(&sa, inLen, hbuf, sizeof(hbuf), sbuf, sizeof(sbuf), NI_NUMERICHOST | NI_NUMERICSERV);

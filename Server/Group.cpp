@@ -1,5 +1,8 @@
 #include "Global.h"
+#include "Packet.h"
+
 #include "Device.h"
+#include "Group.h"
 
 int Group::addDevice(Device* dev)
 {

@@ -5,10 +5,11 @@
  * 공용 필수 라이브러리 포함 부분
  */
 #include <iostream>
-#include <string>
+#include <cstring>
 #include <cstdio>
-#include <vector>
+#include <cstdlib>
 
+#include <vector>
 #include <map>
 #include <pthread.h>
 using namespace std;
@@ -21,6 +22,7 @@ using namespace std;
 #include <fcntl.h>
 #include <netdb.h>
 #include <errno.h>
+#include <unistd.h>
 
 /**
  * 이 다음 부분에 사용자 정의 라이브러리들을 포함

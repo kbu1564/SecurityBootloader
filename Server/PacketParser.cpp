@@ -1,6 +1,7 @@
 #include "Global.h"
 #include "Protocol.h"
 
+#include "Packet.h"
 #include "PacketParser.h"
 
 char* PacketParser::encode(Packet& p)
@@ -10,10 +11,11 @@ char* PacketParser::encode(Packet& p)
 
 Packet PacketParser::decode(const char* buff)
 {
-    return 0;
+    Packet p;
+    return p;
 }
 
-Protocol PacketParser::decodeProtocol(const char* buff)
+int PacketParser::decodeProtocol(const char* buff)
 {
     return 0; 
 }

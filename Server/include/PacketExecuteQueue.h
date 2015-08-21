@@ -3,13 +3,13 @@
 
 // 원형큐 방식
 // 큐 데이터 배열 크기
+const int MAX_QUEUE_SIZE = 100;
 
-template<const int SIZE = 100>
 class PacketExecuteQueue
 {
 private:
     // Member Variable
-    Packet mPacketDataList[SIZE];
+    Packet mPacketDataList[MAX_QUEUE_SIZE];
     int    mFront;
     int    mRear;
 
@@ -24,7 +24,7 @@ private:
 
     int __getNextIndex(int index)
     {
-        return index % SIZE;   
+        return index % MAX_QUEUE_SIZE;
     }
 
 public:
@@ -40,25 +40,25 @@ public:
     {
         if (this->__getNextIndex(this->mRear) == this->mFront)
             return -1;
-                
+
         this->mRear = this->__getNextIndex(this->mRear);
         this->mPacketDataList[this->mRear] = p;
-        
+
         return 0;
     }
-    
+
     int  popExecute()
     {
         // Not exist packet
-        if (this->__isEmpty()) 
+        if (this->__isEmpty())
             return -1;
-        
+
         // Execute packet execute function
         Packet p = this->mPacketDataList[this->mFront];
-        this->mFront = this->__getNextIndex(this->mFront);   
+        this->mFront = this->__getNextIndex(this->mFront);
 
-        p.execute(); 
-    
+        p.execute();
+
         return 0;
     }
 };
