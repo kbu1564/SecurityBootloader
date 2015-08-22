@@ -4,7 +4,6 @@
 // thread aync vars
 pthread_cond_t  gPthCond  = PTHREAD_COND_INITIALIZER;
 pthread_mutex_t gPthMutex = PTHREAD_MUTEX_INITIALIZER;
-int             gPthCount = 0;
 pthread_info_t  gPthInfoVec[MAX_THREAD_POOL];
 pthread_mutex_t gPthreadMutex = PTHREAD_MUTEX_INITIALIZER;
 
@@ -27,7 +26,7 @@ ThreadPool::ThreadPool()
         pthread_info_t pthInfo;
         pthInfo.pthIdx = pthIdx;
         pthread_cond_init(&pthInfo.cond, NULL);
-        gPthInfoVec[gPthCount++] = pthInfo;
+        gPthInfoVec[i] = pthInfo;
 
         pthread_cond_wait(&gPthCond, &gPthMutex);
         pthread_mutex_unlock(&gPthMutex);
