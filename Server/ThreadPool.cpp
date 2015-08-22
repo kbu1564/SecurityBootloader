@@ -1,74 +1,79 @@
 #include "Global.h"
 #include "ThreadPool.h"
 
-int ThreadPool::create(RunFunc run, void *arg)
+// thread aync vars
+pthread_cond_t  gPthCond  = PTHREAD_COND_INITIALIZER;
+pthread_mutex_t gPthMutex = PTHREAD_MUTEX_INITIALIZER;
+int             gPthCount = 0;
+pthread_info_t  gPthInfoVec[MAX_THREAD_POOL];
+pthread_mutex_t gPthreadMutex = PTHREAD_MUTEX_INITIALIZER;
+
+ThreadPool::ThreadPool()
 {
-    if (this->mPthActInfo.size() > MAX_THREAD_POOL)
-        return -1;
+    pthread_mutex_init(&gPthMutex, NULL);
+    pthread_cond_init(&gPthCond, NULL);
 
-    PthreadInfo pthInfo;
-    if (pthread_create(&(pthInfo.pth), NULL, run, arg) < 0) {
-        return -1;
-    }
+    for (int i = 0; i < MAX_THREAD_POOL; i++) {
+        pthread_mutex_lock(&gPthMutex);
 
-    this->mPthActInfo.insert(pair<int, pthread_t>(0, pthInfo.pth));
-    this->mPthInfoVec.push_back(pthInfo);
-    this->wait(this->mPthInfoVec.size());
-
-    return 0;
-}
-
-int ThreadPool::wait(const int idx)
-{
-    if (this->mPthInfoVec.size() >= idx)
-        return -1;
-
-    this->__lock();
-    PthreadInfo pth = this->mPthInfoVec[idx];
-    for (multimap<int, pthread_t>::iterator pthIter = this->mPthActInfo.begin(); pthIter != this->mPthActInfo.end(); pthIter++) {
-        pair<int, pthread_t> element = *pthIter;
-        // 찾고자 하는 Thread 가 저장되어 있고 해당 Thread 가 동작중인 상태일 경우
-        if (pth.pth == element.second && element.first == 1) {
-            this->mPthActInfo.erase(pthIter);
-            this->mPthActInfo.insert(pair<int, pthread_t>(0, element.second));
-            pthread_cond_wait(&(pth.pthCond), &(this->mPthMutex));
+        pthread_idx_t pthIdx;
+        pthIdx.idx = i;
+        if (pthread_create(&pthIdx.pth, NULL, this->__sandbox, &i) < 0) {
+            // shutdown all threads
             break;
         }
+        this->mPthActMap.insert(pair<int, pthread_idx_t>(0, pthIdx));
+
+        pthread_info_t pthInfo;
+        pthInfo.pthIdx = pthIdx;
+        pthread_cond_init(&pthInfo.cond, NULL);
+        gPthInfoVec[gPthCount++] = pthInfo;
+
+        pthread_cond_wait(&gPthCond, &gPthMutex);
+        pthread_mutex_unlock(&gPthMutex);
     }
-    this->__unlock();
+}
+
+ThreadPool::~ThreadPool()
+{
+}
+
+int ThreadPool::add(RunFunc func, void *arg)
+{
+    multimap<int, pthread_idx_t>::iterator mi = this->mPthActMap.begin();
+    pthread_idx_t pthIdx = mi->second;
+
+    pthread_info_t &pthInfo = gPthInfoVec[pthIdx.idx];
+    pthInfo.func = func;
+    pthInfo.arg  = arg;
+    pthread_cond_signal(&pthInfo.cond);
+
+    this->mPthActMap.erase(mi);
+    this->mPthActMap.insert(pair<int, pthread_idx_t>(1, pthIdx));
 
     return 0;
 }
 
-int ThreadPool::wake(const int idx)
+void* ThreadPool::__sandbox(void *obj)
 {
-    if (this->mPthInfoVec.size() >= idx)
-        return -1;
+    int idx = *((int *) obj);
 
-    this->__lock();
-    PthreadInfo pth = this->mPthInfoVec[idx];
-    for (multimap<int, pthread_t>::iterator pthIter = this->mPthActInfo.begin(); pthIter != this->mPthActInfo.end(); pthIter++) {
-        pair<int, pthread_t> element = *pthIter;
-        // 찾고자 하는 Thread 가 저장되어 있고 해당 Thread 가 대기중인 상태일 경우
-        if (pth.pth == element.second && element.first == 0) {
-            this->mPthActInfo.erase(pthIter);
-            this->mPthActInfo.insert(pair<int, pthread_t>(1, element.second));
-            pthread_cond_signal(&(this->mPthInfoVec[idx].pthCond));
-            break;
-        }
+    pthread_mutex_lock(&gPthMutex);
+    pthread_cond_signal(&gPthCond);
+    pthread_mutex_unlock(&gPthMutex);
+
+    for (;;) {
+        pthread_mutex_lock(&gPthreadMutex);
+        pthread_info_t &pthInfo = gPthInfoVec[idx];
+        pthread_cond_wait(&pthInfo.cond, &gPthreadMutex);
+        pthread_mutex_unlock(&gPthreadMutex);
+
+        // worker start
+        pthInfo.func(pthInfo.arg);
     }
-    this->__unlock();
 
-    return 0;
-}
+    pthread_exit(NULL);
 
-void ThreadPool::__lock()
-{
-    pthread_mutex_lock(&this->mPthMutex);
-}
-
-void ThreadPool::__unlock()
-{
-    pthread_mutex_unlock(&this->mPthMutex);
+    return NULL;
 }
 

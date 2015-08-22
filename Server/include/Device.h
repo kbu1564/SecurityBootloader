@@ -7,12 +7,12 @@ enum DeviceType { UNKNOWN, PHONE, PC };
 class Device
 {
 protected:
-    int   mSock;
-    char* mIpAddr;
-    int   mPort;
-    char* mMacAddr;
+    int        mSock;
+    char*      mIpAddr;
+    int        mPort;
+    char*      mMacAddr;
 
-    int   mType;
+    DeviceType mType;
 public:
     Device() {}
     virtual ~Device() {}

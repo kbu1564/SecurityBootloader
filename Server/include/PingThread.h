@@ -4,7 +4,7 @@
 class PingThread
 {
 public:
-    static void run(Server& obj);
+    static void run(void* obj);
 };
 
 #endif

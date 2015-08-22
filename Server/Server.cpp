@@ -25,9 +25,9 @@ bool Server::run(PacketExecuteQueue& q)
     int retval;
     epoll_event event, currEvent;
 
-    int n = epoll_wait(this->mEpollFd, mEvents, MAX_EVENTS, -1);
+    int n = epoll_wait(this->mEpollFd, this->mEvents, MAX_EVENTS, -1);
     for (int i = 0; i < n; i++) {
-        currEvent = mEvents[i];
+        currEvent = this->mEvents[i];
         // 클라이언트 접속이 감지된 경우가 아니고서는 핸들러 구조체 체크
         if (currEvent.data.fd != this->mSock) {
             // 이벤트 발생여부 체크를 위한 변수

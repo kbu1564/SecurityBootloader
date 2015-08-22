@@ -15,8 +15,8 @@ Packet PacketParser::decode(const char* buff)
     return p;
 }
 
-int PacketParser::decodeProtocol(const char* buff)
+Protocol PacketParser::decodeProtocol(const char* buff)
 {
-    return 0; 
+    return START_PROTOCOL; 
 }
 

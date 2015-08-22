@@ -4,28 +4,32 @@
 // Thread 최대 생성 수
 const int MAX_THREAD_POOL = 256;
 // Thread 실행할 함수 포인터
-typedef void *RunFunc(void *arg);
-// Thread 정보 저장용 구조체
-typedef struct _pth
+typedef void (*RunFunc)(void *arg);
+typedef struct _tpi
 {
-    pthread_t      pth;
-    pthread_cond_t pthCond;
-} PthreadInfo;
+    int       idx;
+    pthread_t pth;
+} pthread_idx_t;
+
+typedef struct _tp
+{
+    pthread_idx_t  pthIdx;
+    pthread_cond_t cond;
+    RunFunc        func;
+    void           *arg;
+} pthread_info_t;
 
 class ThreadPool
 {
 private:
-    multimap<int, pthread_t> mPthActInfo;
-    vector<PthreadInfo>      mPthInfoVec;
-
-    pthread_mutex_t          mPthMutex;
+    multimap<int, pthread_idx_t> mPthActMap;
 public:
-    int create(RunFunc run, void *arg);
-    int wait(const int idx);
-    int wake(const int idx);
+    ThreadPool();
+    ~ThreadPool();
+
+    int add(RunFunc func, void *arg);
 private:
-    void __lock();
-    void __unlock();
+    static void* __sandbox(void *obj);
 };
 
 #endif
