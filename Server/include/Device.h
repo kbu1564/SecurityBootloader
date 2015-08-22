@@ -17,6 +17,17 @@ public:
     Device() {}
     virtual ~Device() {}
 
+    void    setSock(int sock)               { this->mSock = sock; }
+    void    setIpAddr(const char* ipAddr)   { this->mIpAddr = ipAddr; }
+    void    setPort(const int port)         { this->mPort = port; }
+    void    setMacAddr(const char* macAddr) { this->mMacAddr = macAddr; }
+    void    setDeviceType(DeviceType type)  { this->mType = type; }
+
+    int     getSock()    { return this->mSock; }
+    char*   getIpAddr()  { return this->mIpAddr; }
+    int     getPort()    { return this->mPort; }
+    char*   getMacAddr() { return this->mMacAddr; }
+
     virtual int send(Packet& p) {}
 };
 
