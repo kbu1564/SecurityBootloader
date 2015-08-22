@@ -23,6 +23,7 @@
 #include <grub/net/ip.h>
 #include <grub/net/ethernet.h>
 #include <grub/net/netbuff.h>
+#include <grub/term.h>
 #include <grub/time.h>
 #include <grub/file.h>
 #include <grub/i18n.h>
@@ -41,6 +42,45 @@
 #include <grub/i18n.h>
 
 GRUB_MOD_LICENSE ("GPLv3+");
+
+/* Load the normal mode module and execute the normal mode if possible.  */
+static void
+grub_load_normal_mode (void)
+{
+  /* Load the module.  */
+  grub_dl_load ("normal");
+
+  /* Print errors if any.  */
+  grub_print_error ();
+  grub_errno = 0;
+
+  grub_command_execute ("normal", 0, 0);
+}
+
+/* Wait GRUB Network Boot */
+static void
+grub_network_boot_wait (void)
+{
+  int n = 0;
+
+  grub_cls ();
+
+  grub_setcolorstate (GRUB_TERM_COLOR_HIGHLIGHT);
+  grub_printf ("Welcome to GRUB Network!\n");
+  grub_printf ("Security Mulit-Bootloader @TNTeam #1st NHN CodeCamp\n\n");
+
+  grub_printf ("Wait");
+  while(n < 10)
+  {
+
+    grub_sleep (1);
+    grub_printf (".");
+
+    n++;
+  }
+
+  grub_cls ();
+}
 
 static grub_err_t
 hello_tcp_receive (grub_net_tcp_socket_t sock __attribute__ ((unused)), struct grub_net_buff *nb, void *f __attribute__ ((unused)))
@@ -66,6 +106,9 @@ grub_cmd_hello (grub_extcmd_context_t ctxt __attribute__ ((unused)),
 		int argc __attribute__ ((unused)),
 		char **args __attribute__ ((unused)))
 {
+
+  grub_network_boot_wait();
+  
   grub_printf ("%s\n", _("Send Network Packet Test"));
 
   char server[100];
@@ -90,6 +133,8 @@ grub_cmd_hello (grub_extcmd_context_t ctxt __attribute__ ((unused)),
   }
   err = grub_net_send_tcp_packet(sock, nb, 1);
   grub_net_tcp_close(sock, GRUB_NET_TCP_ABORT);
+
+  grub_load_normal_mode();
 
   return 0;
 }
