@@ -9,6 +9,9 @@
 #include "Group.h"
 #include "Server.h"
 
+#include "PingThread.h"
+#include "ExecuteThread.h"
+
 // 서버 실행
 // 사용시 : 루프의 조건으로 실행할 것
 bool Server::run(PacketExecuteQueue& q)
@@ -59,8 +62,13 @@ int Server::createServer(const int port)
 
     this->__init();
     this->__setNonBlock(this->mSock);
-    listen(this->mSock, SOMAXCONN);
     this->__initEpoll();
+
+    PingThread pt;
+    ExecuteThread et;
+
+    this->mThreadPool.add(pt.run, &mDevices);
+    this->mThreadPool.add(et.run, NULL);
 
     return 0;
 }
@@ -102,6 +110,8 @@ int Server::__init()
     retval = bind(this->mSock, result->ai_addr, result->ai_addrlen);
     if (retval == -1)
         return -1;
+
+    listen(this->mSock, SOMAXCONN);
 
     freeaddrinfo(result);
     return 0;
