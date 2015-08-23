@@ -17,6 +17,12 @@
  *  You should have received a copy of the GNU General Public License
  *  along with GRUB.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include <grub/types.h>
+#include <grub/err.h>
+#include <grub/extcmd.h>
+#include <grub/i18n.h>
+#include <grub/priority_queue.h>
+
 #include <grub/net.h>
 #include <grub/net/arp.h>
 #include <grub/net/tcp.h>
@@ -36,12 +42,39 @@
 #include <grub/bufio.h>
 #include <grub/kernel.h>
 
-#include <grub/types.h>
-#include <grub/err.h>
-#include <grub/extcmd.h>
-#include <grub/i18n.h>
-
 GRUB_MOD_LICENSE ("GPLv3+");
+
+struct grub_net_tcp_socket
+{
+  struct grub_net_tcp_socket *next;
+  struct grub_net_tcp_socket **prev;
+
+  int established;
+  int i_closed;
+  int they_closed;
+  int in_port;
+  int out_port;
+  int errors;
+  int they_reseted;
+  int i_reseted;
+  int i_stall;
+  grub_uint32_t my_start_seq;
+  grub_uint32_t my_cur_seq;
+  grub_uint32_t their_start_seq;
+  grub_uint32_t their_cur_seq;
+  grub_uint16_t my_window;
+  struct unacked *unack_first;
+  struct unacked *unack_last;
+  grub_err_t (*recv_hook) (grub_net_tcp_socket_t sock, struct grub_net_buff *nb, void *recv);
+  void (*error_hook) (grub_net_tcp_socket_t sock, void *recv);
+  void (*fin_hook) (grub_net_tcp_socket_t sock, void *recv);
+  void *hook_data;
+  grub_net_network_level_address_t out_nla;
+  grub_net_link_level_address_t ll_target_addr;
+  struct grub_net_network_level_interface *inf;
+  grub_net_packets_t packs;
+  grub_priority_queue_t pq;
+};
 
 /* Load the normal mode module and execute the normal mode if possible.  */
 static void
@@ -65,12 +98,11 @@ grub_network_boot_wait (void)
 
   grub_cls ();
 
-  grub_setcolorstate (GRUB_TERM_COLOR_HIGHLIGHT);
   grub_printf ("Welcome to GRUB Network!\n");
   grub_printf ("Security Mulit-Bootloader @TNTeam #1st NHN CodeCamp\n\n");
 
   grub_printf ("Wait");
-  while(n < 10)
+  while(n < 3)
   {
 
     grub_sleep (1);
@@ -87,17 +119,20 @@ hello_tcp_receive (grub_net_tcp_socket_t sock __attribute__ ((unused)), struct g
 {
   grub_err_t err;
 
+  grub_printf ("hello_tcp_receive\n");
   if (!sock)
   {
       grub_netbuff_free(nb);
       return GRUB_ERR_NONE;
   }
+  char* ptr = (char *) nb->data;
+  grub_printf ("%d == %d ? \n", 0x10000001, *((int *) ptr));
 
   return err;
 }
 
 static void
-hello_tcp_err (grub_net_tcp_socket_t sock __attribute__ ((unused)), void *f __attribute__ ((unused)))
+hello_tcp_err (grub_net_tcp_socket_t sock __attribute__ ((unused)), void* f __attribute__ ((unused)))
 {
 }
 
@@ -113,8 +148,7 @@ grub_cmd_hello (grub_extcmd_context_t ctxt __attribute__ ((unused)),
 
   char server[100];
   grub_strcpy(server, "119.205.252.21");
-
-  grub_net_tcp_socket_t sock = grub_net_tcp_open(server, 10880, hello_tcp_receive, hello_tcp_err, hello_tcp_err, 0);
+  grub_net_tcp_socket_t sock = grub_net_tcp_open(server, 10823, hello_tcp_receive, hello_tcp_err, hello_tcp_err, 0);
 
   grub_err_t err;
   struct grub_net_buff *nb = grub_netbuff_alloc(GRUB_NET_TCP_RESERVE_SIZE + grub_strlen("grub -> server test") + 1);
@@ -132,6 +166,16 @@ grub_cmd_hello (grub_extcmd_context_t ctxt __attribute__ ((unused)),
       grub_memcpy(ptr, "grub -> server test", grub_strlen("grub -> server test") + 1);
   }
   err = grub_net_send_tcp_packet(sock, nb, 1);
+
+  int n = 0;
+  while (n < 3) {
+    struct grub_net_buff *nnb = grub_netbuff_alloc(GRUB_NET_TCP_RESERVE_SIZE + 100);
+    grub_netbuff_reserve(nb, GRUB_NET_TCP_RESERVE_SIZE);
+
+    grub_net_recv_tcp_packet(nnb, sock->inf, &(sock->out_nla));
+    grub_netbuff_free(nnb);
+  }
+
   grub_net_tcp_close(sock, GRUB_NET_TCP_ABORT);
 
   grub_load_normal_mode();
