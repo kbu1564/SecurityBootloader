@@ -22,6 +22,9 @@ int BootingRequestPacket::execute()
 {
     vector<Device> &devs = this->mGroups[this->mGroupMacAddr];
 
+    for (vector<Device>::iterator iter = devs.begin(); iter != devs.end(); iter++) {
+        
+    }
     return 0;
 }
 
