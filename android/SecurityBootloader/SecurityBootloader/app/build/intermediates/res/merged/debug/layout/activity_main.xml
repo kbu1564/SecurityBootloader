@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+    <Button
+        android:background="@drawable/button"
+        android:drawableLeft="@android:drawable/ic_menu_rotate"
+        android:drawablePadding="-10dp"
+        android:textAlignment="center"
+        android:id = "@+id/alert"
+        android:layout_width="110dp"
+        android:layout_height="85dp"
+        android:text="시작"
+        android:textSize="17dp"
+        android:layout_gravity="bottom" />
+
+    <Button
+        android:background="@drawable/button"
+        android:drawablePadding="-10dp"
+        android:textAlignment="center"
+        android:drawableLeft="@android:drawable/ic_lock_power_off"
+        android:id = "@+id/alert2"
+        android:layout_width="110dp"
+        android:layout_height="85dp"
+        android:textSize="17dp"
+        android:text="종료"
+        android:layout_gravity="bottom" />
+
+    <Button
+        android:background="@drawable/button"
+        android:drawablePadding="-10dp"
+        android:textAlignment="center"
+        android:drawableLeft="@android:drawable/ic_menu_mapmode"
+        android:id = "@+id/alert3"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:textSize="17dp"
+        android:text="노트북 위치 추적"
+        android:layout_gravity="bottom" />
+
+</LinearLayout>
+<!-- From: file:/Users/root1/Desktop/SecurityBootloader/app/src/main/res/layout/activity_main.xml -->
