@@ -3,7 +3,7 @@
 
 #include "Packet.h"
 #include "PacketParser.h"
-#include "packet/FindDevicePacket.h"
+#include "packet/SetDevicePacket.h"
 #include "packet/ShutdownDevicePacket.h"
 #include "packet/BootingDevicePacket.h"
 #include "packet/BootingRequestPacket.h"
@@ -11,8 +11,8 @@
 Packet* PacketParser::__getPacketObject(Protocol protocol)
 {
     switch (protocol) {
-    case FIND_DEVICE:
-        return new FindDevicePacket();
+    case SET_DEVICE:
+        return new SetDevicePacket();
     case SHUTDOWN_DEVICE:
         return new ShutdownDevicePacket();
     case BOOTING_DEVICE:
