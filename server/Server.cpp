@@ -182,7 +182,7 @@ int HANDLER Server::__connect(epoll_event currEvent, PacketExecuteQueue& q)
                 return -1;
         }
 
-        this->__setNonBlock(infd);
+        //this->__setNonBlock(infd);
 
         //int retval = getnameinfo(&sa, inLen, hbuf, sizeof(hbuf), sbuf, sizeof(sbuf), NI_NUMERICHOST | NI_NUMERICSERV);
         //if (retval == 0) {
