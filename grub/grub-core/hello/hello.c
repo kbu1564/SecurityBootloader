@@ -17,6 +17,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with GRUB.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include <grub/Protocol.h>
 #include <grub/types.h>
 #include <grub/err.h>
 #include <grub/extcmd.h>
@@ -119,16 +120,26 @@ hello_tcp_receive (grub_net_tcp_socket_t sock __attribute__ ((unused)), struct g
 {
   grub_err_t err;
 
-  grub_printf ("hello_tcp_receive\n");
   if (!sock)
   {
       grub_netbuff_free(nb);
-      return GRUB_ERR_NONE;
+      return err;
   }
-  char* ptr = (char *) nb->data;
-  grub_printf ("%d == %d ? \n", 0x10000001, *((int *) ptr));
 
-  return err;
+  char* ptr = (char *) nb->data;
+  int protocol = *((int *) ptr);
+  int size = *((int *) ptr + 4);
+  char buff[512] = { 0, };
+  switch (protocol) {
+  case FIND_DEVICE:
+    break;
+  case BOOTING_DEVICE:
+    grub_net_tcp_close(sock, GRUB_NET_TCP_ABORT);
+    grub_load_normal_mode();
+    break;
+  }
+
+  return GRUB_ERR_NONE;
 }
 
 static void
@@ -148,37 +159,36 @@ grub_cmd_hello (grub_extcmd_context_t ctxt __attribute__ ((unused)),
 
   char server[100];
   grub_strcpy(server, "119.205.252.21");
-  grub_net_tcp_socket_t sock = grub_net_tcp_open(server, 10823, hello_tcp_receive, hello_tcp_err, hello_tcp_err, 0);
+  grub_net_tcp_socket_t sock = grub_net_tcp_open(server, 10880, hello_tcp_receive, hello_tcp_err, hello_tcp_err, 0);
+
+  char packBuff[512] = { 0, };
+  int packSize = 0;
+
+  // 장치 등록 요청 패킷 생성 부분
+  // Protocol : SET_DEVICE
 
   grub_err_t err;
-  struct grub_net_buff *nb = grub_netbuff_alloc(GRUB_NET_TCP_RESERVE_SIZE + grub_strlen("grub -> server test") + 1);
+  struct grub_net_buff *nb = grub_netbuff_alloc(GRUB_NET_TCP_RESERVE_SIZE + packSize);
   if (nb)
   {
       grub_netbuff_reserve(nb, GRUB_NET_TCP_RESERVE_SIZE);
       grub_uint8_t *ptr = nb->tail;
-      err = grub_netbuff_put(nb, grub_strlen("grub -> server test") + 1);
+      err = grub_netbuff_put(nb, packSize);
       if (err)
       {
           grub_netbuff_free(nb);
           grub_net_tcp_close(sock, GRUB_NET_TCP_ABORT);
           return err;
       }
-      grub_memcpy(ptr, "grub -> server test", grub_strlen("grub -> server test") + 1);
+      grub_memcpy(ptr, packBuff, packSize);
   }
   err = grub_net_send_tcp_packet(sock, nb, 1);
 
-  int n = 0;
-  while (n < 3) {
-    struct grub_net_buff *nnb = grub_netbuff_alloc(GRUB_NET_TCP_RESERVE_SIZE + 100);
-    grub_netbuff_reserve(nb, GRUB_NET_TCP_RESERVE_SIZE);
+  struct grub_net_buff *nnb = grub_netbuff_alloc(GRUB_NET_TCP_RESERVE_SIZE + 512);
+  grub_netbuff_reserve(nb, GRUB_NET_TCP_RESERVE_SIZE);
 
-    grub_net_recv_tcp_packet(nnb, sock->inf, &(sock->out_nla));
-    grub_netbuff_free(nnb);
-  }
-
-  grub_net_tcp_close(sock, GRUB_NET_TCP_ABORT);
-
-  grub_load_normal_mode();
+  grub_net_recv_tcp_packet(nnb, sock->inf, &(sock->out_nla));
+  grub_netbuff_free(nnb);
 
   return 0;
 }
