@@ -4,7 +4,6 @@
 #include "Packet.h"
 #include "PacketParser.h"
 #include "Device.h"
-#include "Group.h"
 
 int Device::send(Packet* p)
 {

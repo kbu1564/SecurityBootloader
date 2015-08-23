@@ -6,7 +6,7 @@ class BootingRequestPacket : public Packet
 private:
     string mGroupMacAddr;
 public:
-    int   parser(const char* buff, const int size);
+    int   parser(char* buff, int size);
     char* encode(int* size);
     int   execute();
 };

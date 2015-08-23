@@ -5,10 +5,8 @@
 #include "Packet.h"
 #include "PacketExecuteQueue.h"
 #include "PacketParser.h"
-#include "packet/FindDevicePacket.h"
 
 #include "Device.h"
-#include "Group.h"
 #include "Server.h"
 
 #include "PingThread.h"
@@ -231,7 +229,7 @@ int HANDLER Server::__receive(epoll_event currEvent, PacketExecuteQueue& q)
                     break;
                 }
             }
-            packet->setGroups(this->mGroups);
+            packet->setGroups(&this->mGroups);
             q.push(packet);
         }
     }

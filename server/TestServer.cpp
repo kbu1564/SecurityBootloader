@@ -5,7 +5,6 @@
 #include "PacketParser.h"
 
 #include "Device.h"
-#include "Group.h"
 #include "PacketExecuteQueue.h"
 #include "Server.h"
 

@@ -3,7 +3,6 @@
 
 #include "Packet.h"
 #include "Device.h"
-#include "Group.h"
 #include "PingThread.h"
 #include "packet/PingDevicePacket.h"
 

@@ -4,7 +4,7 @@
 class PingDevicePacket : public Packet
 {
 public:
-    int   parser(const char* buff, const int size);
+    int   parser(char* buff, int size);
     char* encode(int* size);
     int   execute();
 };
