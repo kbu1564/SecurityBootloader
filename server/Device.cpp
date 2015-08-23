@@ -8,10 +8,10 @@
 
 int Device::send(Packet* p)
 {
-    int bufflen = 0;
-    char* buff = p->encode(&bufflen);
-
     if (this->mSock != 0) {
+        int bufflen = 0;
+        char* buff = p->encode(&bufflen);
+
         int nwrite = write(this->mSock, buff, bufflen);
         delete buff;
 
