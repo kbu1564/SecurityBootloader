@@ -184,8 +184,7 @@ int HANDLER Server::__connect(epoll_event currEvent, PacketExecuteQueue& q)
 
         this->__setNonBlock(infd);
 
-        int retval;
-        //retval = getnameinfo(&sa, inLen, hbuf, sizeof(hbuf), sbuf, sizeof(sbuf), NI_NUMERICHOST | NI_NUMERICSERV);
+        //int retval = getnameinfo(&sa, inLen, hbuf, sizeof(hbuf), sbuf, sizeof(sbuf), NI_NUMERICHOST | NI_NUMERICSERV);
         //if (retval == 0) {
         //    // ** host = hbuf, serv = sbuf
         //}
@@ -197,12 +196,12 @@ int HANDLER Server::__connect(epoll_event currEvent, PacketExecuteQueue& q)
         dev.setDeviceType(UNKNOWN);
         this->mDevices.push_back(dev);
 
-        cout << "Server::__connect()" << endl;
+        //cout << "Server::__connect()" << endl;
 
         epoll_event event;
         event.data.fd = infd;
         event.events = EPOLLIN | EPOLLRDHUP | EPOLLET;
-        retval = epoll_ctl(this->mEpollFd, EPOLL_CTL_ADD, infd, &event);
+        int retval = epoll_ctl(this->mEpollFd, EPOLL_CTL_ADD, infd, &event);
     }
     return 0;
 }
@@ -220,13 +219,14 @@ int HANDLER Server::__receive(epoll_event currEvent, PacketExecuteQueue& q)
         //if (nread < MAX_BUFFER_SIZE) buf[nread] = 0;
 
         // ** recv event!!
-        cout << "Server::__receive()" << endl;
-        cout << "Receive(" << nread << ") : " << buf << endl;
+        //cout << "Server::__receive()" << endl;
+        //cout << "Receive(" << nread << ") : " << buf << endl;
 
-        //PacketParser pp;
-        //Packet* packet = pp.decode(buf, nread);
-        //if (packet != NULL) {
-        //}
+        PacketParser pp;
+        Packet* packet = pp.decode(buf, nread);
+        if (packet != NULL) {
+            q.push(packet);
+        }
     }
     return 0;
 }
@@ -234,11 +234,22 @@ int HANDLER Server::__receive(epoll_event currEvent, PacketExecuteQueue& q)
 // 클라이언트와 연결 종료시 실행되는 핸들러 함수
 int HANDLER Server::__disconnect(epoll_event currEvent, PacketExecuteQueue& q)
 {
-    int retval = close(currEvent.data.fd);
-    if (retval == -1)
-        return -1;
+    // search to disconnect socket of client
+    for (vector<Device>::iterator devIter = this->mDevices.begin(); devIter != this->mDevices.end(); devIter++) {
+        if (devIter->getSock() == currEvent.data.fd) {
+            // setting delete iterator
+            vector<Device>::iterator delDev = devIter;
+            this->mDevices.erase(delDev);
 
-    cout << "Server::__disconnect()" << endl;
+            // client socket close
+            int retval = close(currEvent.data.fd);
+            if (retval == -1)
+                return -1;
+
+            break;
+        }
+    }
+    //cout << "Server::__disconnect()" << endl;
 
     return 0;
 }

@@ -3,28 +3,32 @@
 
 // 원형큐 방식
 // 큐 데이터 배열 크기
-const int MAX_QUEUE_SIZE = 100;
+const int MAX_QUEUE_SIZE = 1000;
 
 class PacketExecuteQueue
 {
 private:
     // Member Variable
-    Packet mPacketDataList[MAX_QUEUE_SIZE];
-    int    mFront;
-    int    mRear;
+    pthread_mutex_t mPthMutex;
+
+    Packet *mPacketDataList[MAX_QUEUE_SIZE];
+
+    int     mFront;
+    int     mRear;
+    int     mCounts;
 
     // Private Function
     bool __isEmpty()
     {
-        if (this->mFront == this->mRear)
+        if (mCounts <= 0)
             return true;
-        
+
         return false;
     }
 
     int __getNextIndex(int index)
     {
-        return index % MAX_QUEUE_SIZE;
+        return (index + 1) % MAX_QUEUE_SIZE;
     }
 
 public:
@@ -32,34 +36,38 @@ public:
     {
         this->mFront = 0;
         this->mRear = 0;
+        this->mCounts = 0;
+        pthread_mutex_init(&this->mPthMutex, NULL);
     }
 
     ~PacketExecuteQueue() {}
 
-    int push(Packet p)
+    int push(Packet* p)
     {
         if (this->__getNextIndex(this->mRear) == this->mFront)
             return -1;
 
+        pthread_mutex_lock(&this->mPthMutex);
         this->mRear = this->__getNextIndex(this->mRear);
         this->mPacketDataList[this->mRear] = p;
+        this->mCounts++;
+        pthread_mutex_unlock(&this->mPthMutex);
 
         return 0;
     }
 
-    int  popExecute()
+    Packet* pop()
     {
-        // Not exist packet
         if (this->__isEmpty())
-            return -1;
+            return NULL;
 
-        // Execute packet execute function
-        Packet p = this->mPacketDataList[this->mFront];
+        pthread_mutex_lock(&this->mPthMutex);
+        Packet* packet = this->mPacketDataList[this->mFront];
         this->mFront = this->__getNextIndex(this->mFront);
+        this->mCounts--;
+        pthread_mutex_unlock(&this->mPthMutex);
 
-        p.execute();
-
-        return 0;
+        return packet;
     }
 };
 

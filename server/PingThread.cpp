@@ -11,7 +11,7 @@ void PingThread::run(void* obj)
 {
     vector<Device>* devs = (vector<Device> *) obj;
     while (1) {
-        sleep(1);
+        sleep(5);
         cout << "Ping Thread!! : " << devs->size() << endl;
         if (devs->size() > 0) {
             Device &dev = (*devs)[0];

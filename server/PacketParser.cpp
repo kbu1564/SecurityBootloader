@@ -23,21 +23,24 @@ Packet* PacketParser::__getPacketObject(Protocol protocol)
     return NULL;
 }
 
-Packet* PacketParser::decode(const char* buff)
+Packet* PacketParser::decode(char* buff, int buffSize)
 {
     Protocol protocol = this->decodeProtocol(buff);
     int size = *((int *) buff + 4);
 
     if (protocol > START_PROTOCOL && protocol < END_PROTOCOL) {
+        /*
         Packet* packet = this->__getPacketObject(protocol);
         if (packet != NULL && packet->parser(buff + 8, size) != -1)
             return packet;
+        */
     }
 
-    return NULL;
+    return new FindDevicePacket();
+    //return NULL;
 }
 
-Protocol PacketParser::decodeProtocol(const char* buff)
+Protocol PacketParser::decodeProtocol(char* buff)
 {
     int protocol = *((int *) buff);
     if (protocol > START_PROTOCOL && protocol < END_PROTOCOL)

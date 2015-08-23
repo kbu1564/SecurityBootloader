@@ -20,6 +20,7 @@ char* FindDevicePacket::encode(int* size)
 
 int FindDevicePacket::execute()
 {
+    cout << "FindDevicePacket::execute()" << endl;
     return 0;
 }
 
