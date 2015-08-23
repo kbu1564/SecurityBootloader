@@ -11,6 +11,7 @@
 
 #include <vector>
 #include <map>
+#include <hash_map>
 #include <pthread.h>
 using namespace std;
 

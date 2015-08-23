@@ -3,8 +3,12 @@
 
 class BootingRequestPacket : public Packet
 {
+private:
+    string mGroupMacAddr;
 public:
-    int execute();
+    int   parser(const char* buff, const int size);
+    char* encode(int* size);
+    int   execute();
 };
 
 #endif

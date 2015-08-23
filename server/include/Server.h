@@ -22,14 +22,14 @@ private:
         MAX_BUFFER_SIZE = 512
     };
 protected:
-    int            mEpollFd;
-    int            mSock;
-    int            mPort;
-    vector<Group>  mGroups;
-    vector<Device> mDevices;
-    epoll_event    mEvents[MAX_EVENTS];
+    int                              mEpollFd;
+    int                              mSock;
+    int                              mPort;
+    hash_map<string, vector<Device>> mGroups;
+    vector<Device>                   mDevices;
+    epoll_event                      mEvents[MAX_EVENTS];
 
-    ThreadPool     mThreadPool;
+    ThreadPool                       mThreadPool;
 public:
     Server() : mSock(0), mPort(0) {}
     ~Server() { this->shutdownServer(); }
