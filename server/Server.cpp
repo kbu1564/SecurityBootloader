@@ -182,7 +182,7 @@ int HANDLER Server::__connect(epoll_event currEvent, PacketExecuteQueue& q)
                 return -1;
         }
 
-        //this->__setNonBlock(infd);
+        this->__setNonBlock(infd);
 
         //int retval = getnameinfo(&sa, inLen, hbuf, sizeof(hbuf), sbuf, sizeof(sbuf), NI_NUMERICHOST | NI_NUMERICSERV);
         //if (retval == 0) {
@@ -196,7 +196,7 @@ int HANDLER Server::__connect(epoll_event currEvent, PacketExecuteQueue& q)
         dev.setDeviceType(UNKNOWN);
         this->mDevices.push_back(dev);
 
-        //cout << "Server::__connect()" << endl;
+        cout << "Server::__connect()" << endl;
 
         epoll_event event;
         event.data.fd = infd;
@@ -219,7 +219,7 @@ int HANDLER Server::__receive(epoll_event currEvent, PacketExecuteQueue& q)
         //if (nread < MAX_BUFFER_SIZE) buf[nread] = 0;
 
         // ** recv event!!
-        //cout << "Server::__receive()" << endl;
+        cout << "Server::__receive()" << endl;
         //cout << "Receive(" << nread << ") : " << buf << endl;
 
         PacketParser pp;
@@ -249,7 +249,7 @@ int HANDLER Server::__disconnect(epoll_event currEvent, PacketExecuteQueue& q)
             break;
         }
     }
-    //cout << "Server::__disconnect()" << endl;
+    cout << "Server::__disconnect()" << endl;
 
     return 0;
 }
