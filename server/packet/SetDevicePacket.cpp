@@ -5,6 +5,7 @@
 
 int SetDevicePacket::parser(const char* buff, const int size)
 {
+    cout << "Grub Client MAC : " << buff << endl;
     return 0;
 }
 

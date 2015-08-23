@@ -30,7 +30,7 @@ Packet* PacketParser::decode(char* buff, int buffSize)
 
     if (protocol > START_PROTOCOL && protocol < END_PROTOCOL) {
         Packet* packet = this->__getPacketObject(protocol);
-        if (packet != NULL && packet->parser(buff + 8, size) != -1)
+        if (packet != NULL && packet->parser(buff + 8, size - 8) != -1)
             return packet;
     }
 
