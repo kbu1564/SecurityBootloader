@@ -29,15 +29,12 @@ Packet* PacketParser::decode(char* buff, int buffSize)
     int size = *((int *) buff + 4);
 
     if (protocol > START_PROTOCOL && protocol < END_PROTOCOL) {
-        /*
         Packet* packet = this->__getPacketObject(protocol);
         if (packet != NULL && packet->parser(buff + 8, size) != -1)
             return packet;
-        */
     }
 
-    return new FindDevicePacket();
-    //return NULL;
+    return NULL;
 }
 
 Protocol PacketParser::decodeProtocol(char* buff)

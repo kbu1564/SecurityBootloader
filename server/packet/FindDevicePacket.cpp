@@ -5,6 +5,7 @@
 
 int FindDevicePacket::parser(const char* buff, const int size)
 {
+    cout << "FindDevicePacket::parser()" << endl;
     return 0;
 }
 
