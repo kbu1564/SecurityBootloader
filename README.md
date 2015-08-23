@@ -1,5 +1,4 @@
 # Grub based Security Multi-Bootloader System
- <img width="752" alt="2015-08-23 10 48 56" src="https://cloud.githubusercontent.com/assets/9815703/9428750/c0aa8ff4-49f3-11e5-8a31-b45032e0d7b6.png">
 
 ## Introduction
 노트북을 도난당했을 경우, 도둑의 이미지와 위치정보를 알수가 없습니다 그래서 저희는 부팅하는 동시에 이미지 촬용과 IP주소를 네트워크로 보내서 사용자 휴대폰 어플로 정보(IP주소와 사진)를 통하여 범인을 찾기 위해서 만들었습니다 
