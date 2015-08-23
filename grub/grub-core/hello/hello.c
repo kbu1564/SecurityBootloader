@@ -17,6 +17,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with GRUB.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include <grub/DeviceType.h>
 #include <grub/Protocol.h>
 #include <grub/types.h>
 #include <grub/err.h>
@@ -94,7 +95,7 @@ grub_load_normal_mode (void)
 static grub_err_t
 grub_send_protocol_packet (grub_net_tcp_socket_t sock, int protocol, char* buf, int bufSize)
 {
-  grub_err_t err;
+  static grub_err_t err;
   if (!sock) {
       return err;
   }
@@ -201,14 +202,18 @@ grub_cmd_hello (grub_extcmd_context_t ctxt __attribute__ ((unused)),
   // Protocol : SET_DEVICE
   //------------------------------------------------------------------------------------------
   int protocol = SET_DEVICE;
-  grub_err_t err = grub_send_protocol_packet(sock, protocol, buf, grub_strlen(buf) + 1);
+  int deviceType = PC;
+  char sbuf[100];
+  grub_memcpy(sbuf, &deviceType, 4);
+  grub_memcpy(sbuf + 4, buf, grub_strlen(buf) + 1);
+  grub_send_protocol_packet(sock, protocol, sbuf, 4 + grub_strlen(buf) + 1);
   //------------------------------------------------------------------------------------------
 
   // 부팅 여부를 묻기 위한 패킷 전송
   // Protocol : BOOTING_REQUEST
   //------------------------------------------------------------------------------------------
   protocol = BOOTING_REQUEST;
-  grub_err_t err = grub_send_protocol_packet(sock, protocol, buf, grub_strlen(buf) + 1);
+  grub_send_protocol_packet(sock, protocol, buf, grub_strlen(buf) + 1);
   //------------------------------------------------------------------------------------------
 
   struct grub_net_buff *nnb = grub_netbuff_alloc(GRUB_NET_TCP_RESERVE_SIZE + 512);
