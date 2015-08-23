@@ -16,6 +16,16 @@ enum Protocol
 	START_PROTOCOL = 0x10000000,
 
     /**
+     * HeartBeat 체크용 프로토콜
+     */
+    PING_DEVICE,
+
+    /**
+     * 스마트폰의 서비스가 실행 되었을 때 자신이 제어할 대상을 등록 대기상태 요청
+     */
+    SET_DEVICE,
+
+    /**
      * 요청을 보내는 장치에 대응하는 다른 장치 찾기
      */
     FIND_DEVICE,

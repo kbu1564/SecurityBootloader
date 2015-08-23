@@ -2,10 +2,10 @@
 #include "Protocol.h"
 
 #include "Packet.h"
-#include "packet/FindDevicePacket.h"
 #include "Device.h"
 #include "Group.h"
 #include "PingThread.h"
+#include "packet/PingDevicePacket.h"
 
 void PingThread::run(void* obj)
 {
@@ -13,9 +13,14 @@ void PingThread::run(void* obj)
     while (1) {
         sleep(5);
         cout << "Ping Thread!! : " << devs->size() << endl;
-        if (devs->size() > 0) {
-            Device &dev = (*devs)[0];
-            dev.send(new FindDevicePacket());
+        for (vector<Device>::iterator iter = devs->begin(); iter != devs->end(); iter++) {
+            PingDevicePacket pp;
+            int retval = iter->send(&pp);
+            if (retval <= 0) {
+                // client disconnected
+                vector<Device>::iterator delIter = iter;
+                devs->erase(delIter);
+            }
         }
     }
 }

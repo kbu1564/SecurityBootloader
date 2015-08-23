@@ -8,16 +8,15 @@
 
 int Device::send(Packet* p)
 {
-    int bufflen = 0;
-    char* buff = p->encode(&bufflen);
-    cout << "Sendto : " << buff << endl;
-
     if (this->mSock != 0) {
-        int nwrite = 0;
-        while (nwrite < bufflen) {
-            nwrite += write(this->mSock, (char *)(buff + nwrite), bufflen - nwrite);
-        }
+        int bufflen = 0;
+        char* buff = p->encode(&bufflen);
+
+        int nwrite = write(this->mSock, buff, bufflen);
+        delete buff;
+
+        return nwrite;
     }
-    return 0;
+    return -1;
 }
 

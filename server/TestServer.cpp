@@ -16,8 +16,9 @@ int main(int argc, char* argv[])
 
     s.createServer(10880);
     s.createExecuteThread(q);
-    while (s.run(q)) {
-    }
+
+    while (s.run(q));
+
     s.shutdownServer();
     return 0;
 }
