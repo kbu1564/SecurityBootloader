@@ -3,7 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="1">
+    android:weightSum="1"
+    android:orientation="vertical">
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.57" />
 
     <Button
         android:background="@drawable/button"
@@ -11,8 +19,8 @@
         android:drawablePadding="-10dp"
         android:textAlignment="center"
         android:id = "@+id/alert"
-        android:layout_width="110dp"
-        android:layout_height="85dp"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
         android:text="시작"
         android:textSize="17dp"
         android:layout_gravity="bottom" />
@@ -23,23 +31,25 @@
         android:textAlignment="center"
         android:drawableLeft="@android:drawable/ic_lock_power_off"
         android:id = "@+id/alert2"
-        android:layout_width="110dp"
-        android:layout_height="85dp"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
         android:textSize="17dp"
         android:text="종료"
-        android:layout_gravity="bottom" />
-
+        android:layout_weight="0.03" />
     <Button
         android:background="@drawable/button"
         android:drawablePadding="-10dp"
         android:textAlignment="center"
-        android:drawableLeft="@android:drawable/ic_menu_mapmode"
+        android:drawableLeft="@android:drawable/ic_lock_power_off"
         android:id = "@+id/alert3"
         android:layout_width="match_parent"
-        android:layout_height="85dp"
+        android:layout_height="70dp"
         android:textSize="17dp"
-        android:text="노트북 위치 추적"
-        android:layout_gravity="bottom" />
+        android:text="TEST MAC"
+        android:layout_weight="0.03" />
+
+    <TextView android:id="@+id/test1" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
 <!-- From: file:/Users/root1/Desktop/SecurityBootloader/app/src/main/res/layout/activity_main.xml -->

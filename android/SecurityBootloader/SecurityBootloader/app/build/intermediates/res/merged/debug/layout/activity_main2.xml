@@ -6,45 +6,8 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.example.kimhajin.securitybootloader.Main2Activity">
 
-    <TextView android:text="노트북 네트워크 IP를 통하여 위치추적" android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView"
-        android:textSize="20dp"
-        android:textColor="#F44336"
-        android:textStyle="bold"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
-    <TextView android:text="사용방법 " android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="18dp"
-        android:textColor="#F44336"
-        android:id="@+id/textView2"
-        android:layout_below="@+id/textView"
-        android:layout_centerHorizontal="true" />
-
-    <TextView android:text="IP를 IP검색창에 입력후 주소검색을 누릅니다!!" android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView3"
-        android:textSize="15dp"
-        android:layout_below="@+id/textView2"
-        android:layout_centerHorizontal="true" />
-
-    <WebView
-        android:layout_width="match_parent"
-        android:layout_height="140dp"
-        android:id="@+id/webView"
-        android:layout_below="@+id/textView4"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"></WebView>
-
-    <TextView
-        android:text="(중계서버에 보낸 PC IP 표시될 위치)"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView4"
-        android:textSize="15dp"
-        android:layout_below="@+id/textView3"
-        android:layout_centerHorizontal="true" />
+    <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </RelativeLayout>
 <!-- From: file:/Users/root1/Desktop/SecurityBootloader/app/src/main/res/layout/activity_main2.xml -->

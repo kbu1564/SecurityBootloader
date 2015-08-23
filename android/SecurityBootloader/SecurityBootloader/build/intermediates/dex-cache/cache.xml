@@ -2,32 +2,165 @@
 <items version="2" >
 
     <item
-        jar="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.1/jars/libs/internal_impl-22.2.1.jar"
+        jar="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-cast/7.8.0/jars/classes.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="c471eaaba13ff64f6e0383d1c30a9cdc9a97efeb">
-        <dex dex="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/pre-dexed/debug/internal_impl-22.2.1-853f28035ad82decaf8c0232b99ae48d131b9fab.jar" />
+        sha1="130b32ed466fa0f63efd4c7d6250ccd2ed506790">
+        <dex dex="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/pre-dexed/debug/classes-f08ba0983c0e3066875e7a9244411d557e2c6a02.jar" />
     </item>
     <item
-        jar="/Users/root1/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/22.2.1/support-annotations-22.2.1.jar"
+        jar="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/exploded-aar/com.android.support/mediarouter-v7/22.2.0/jars/libs/internal_impl-22.2.0.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="61a0ff5c29295ec56d7e0bd3d25d95dbf71b4b2b">
-        <dex dex="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/pre-dexed/debug/support-annotations-22.2.1-ab38291b02d4bd768f5604308aea447f9c9ccefc.jar" />
+        sha1="0632f06970823b7e3436f649bfa65b47035c91d0">
+        <dex dex="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/pre-dexed/debug/internal_impl-22.2.0-eafd9ad950234244d9630c1a2c5cead9dfc0a294.jar" />
     </item>
     <item
-        jar="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.1/jars/classes.jar"
+        jar="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-vision/7.8.0/jars/classes.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="f8efd0096475e0daf054267b61544e10dc776503">
-        <dex dex="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/pre-dexed/debug/classes-09a12b5751fe0e00f8fc8822f66739154757ac6d.jar" />
+        sha1="b99f0b78bbcb76b915bc6529a83b65d4d46990dd">
+        <dex dex="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/pre-dexed/debug/classes-64a993333f576e0d97ed56712e9184bfed043c0c.jar" />
     </item>
     <item
-        jar="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.1/jars/classes.jar"
+        jar="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.8.0/jars/classes.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="4486e953d1f35f8ccab098b1dd67146366d5f731">
-        <dex dex="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/pre-dexed/debug/classes-9ae8d225b3f56ec5f836d2555507a6c31fb56ea0.jar" />
+        sha1="c0c912d58c9468b1f9d9769c8975afdf2c85d681">
+        <dex dex="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/pre-dexed/debug/classes-d79bd238d6c9c648446911899142f91ffb669546.jar" />
+    </item>
+    <item
+        jar="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-appindexing/7.8.0/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="e23ea11124bb700eeddd4ab7aa848c615f493850">
+        <dex dex="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/pre-dexed/debug/classes-0bb8ffd37ac29d2040ed1d366a93fb0ca496becb.jar" />
+    </item>
+    <item
+        jar="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-appstate/7.8.0/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="edea92852b40eee716e910af8dad9eeaa58fb0e1">
+        <dex dex="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/pre-dexed/debug/classes-394314f38570ce99019dc8d7c2ba360aaba69696.jar" />
+    </item>
+    <item
+        jar="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-games/7.8.0/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="2e24e5f1b11170163028277de63f709e42525db4">
+        <dex dex="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/pre-dexed/debug/classes-704a58e87cda8aa1451d71eb62dd82668e8853ca.jar" />
+    </item>
+    <item
+        jar="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-wallet/7.8.0/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="c2ac04c5b232f6f0658ee4f1c13be09cd76406e2">
+        <dex dex="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/pre-dexed/debug/classes-50bf9971cec3d55e51a03af662d11389e5d4a5af.jar" />
+    </item>
+    <item
+        jar="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-nearby/7.8.0/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="adebe28e0c0c05d34a3bfd76f3275bf4d8ff87b6">
+        <dex dex="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/pre-dexed/debug/classes-294bb88bb55d8afb12dfdc6b804dbb85941a658d.jar" />
+    </item>
+    <item
+        jar="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-identity/7.8.0/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="d11330ea68c0d964d30d5caed1f27e6b1488b189">
+        <dex dex="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/pre-dexed/debug/classes-bea7168d122531b5725ae13beccb909d99c6bb4a.jar" />
+    </item>
+    <item
+        jar="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-fitness/7.8.0/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="77a9dcb5f8b1dba36aacaa9c150eb0942dbea158">
+        <dex dex="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/pre-dexed/debug/classes-b2f33a29c2a1c0d4cfaa75a3f4b694675632ba21.jar" />
+    </item>
+    <item
+        jar="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-wearable/7.8.0/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="c5cafb324568d954780abb858c25db7ce675ab3c">
+        <dex dex="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/pre-dexed/debug/classes-47fa205bc0971883cb9fe43a7ae347dada5ce06d.jar" />
+    </item>
+    <item
+        jar="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.8.0/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="1ff30fa49c07a08c3035d7218a3efebf5680d522">
+        <dex dex="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/pre-dexed/debug/classes-470bc41d165c2293a43c75702572dc33991ea986.jar" />
+    </item>
+    <item
+        jar="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-location/7.8.0/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="4a135d56554069e5d0ff80e3220e887e57146ee5">
+        <dex dex="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/pre-dexed/debug/classes-c4ca9cb5d539838978b833dbebd66acc227cd2f2.jar" />
+    </item>
+    <item
+        jar="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/7.8.0/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="0124ce31248c0e8acfa2b28283c6d1a4d76e73d2">
+        <dex dex="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/pre-dexed/debug/classes-ec865b304cfbc3dd63be202a8f774e879966feba.jar" />
+    </item>
+    <item
+        jar="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/exploded-aar/com.android.support/mediarouter-v7/22.2.0/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="dcf8c83c3dead00a6c4fe313e95f7aaca20dc641">
+        <dex dex="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/pre-dexed/debug/classes-e7bc490af9a121a6ac405287f5575b58588c24d1.jar" />
+    </item>
+    <item
+        jar="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-appinvite/7.8.0/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="98137c4d12c50923f5809852b1ef4d1c4e162081">
+        <dex dex="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/pre-dexed/debug/classes-bde6d5d11108ff13c95a5b5db89d53fbd6e9642f.jar" />
+    </item>
+    <item
+        jar="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-panorama/7.8.0/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="6e85edfc9b5346d216e50ccef1f8e825504144a3">
+        <dex dex="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/pre-dexed/debug/classes-d69a78f67bc141130440522c702168c4293b9f4f.jar" />
+    </item>
+    <item
+        jar="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-drive/7.8.0/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="42a1ee578b62fd1bd28b3307a679dc9ba0791587">
+        <dex dex="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/pre-dexed/debug/classes-457971a3dbb4550a526ad545cd616a891aaf8eec.jar" />
+    </item>
+    <item
+        jar="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-safetynet/7.8.0/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="166e458ee3b5fb5fcff0f936df3f3a788e6c54f3">
+        <dex dex="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/pre-dexed/debug/classes-6706077e7044c8bee5b0ec4f127020437d92d6dd.jar" />
+    </item>
+    <item
+        jar="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-maps/7.8.0/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="cb6fab7a71fa9ec1f483d44c5fca65ab469d8aca">
+        <dex dex="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/pre-dexed/debug/classes-a00cabe11a7f842505c65e06ff84c16d814a2988.jar" />
+    </item>
+    <item
+        jar="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-plus/7.8.0/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="2491ae1b2a848af1f4f0c795f3117c1bd6a1989f">
+        <dex dex="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/pre-dexed/debug/classes-a2233b7211e9bc909fa690ab6c0ffaa74ae6a2c6.jar" />
+    </item>
+    <item
+        jar="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-gcm/7.8.0/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="c756d14e99d39471e99013a1e8fd2f3813ed42bf">
+        <dex dex="/Users/root1/Desktop/SecurityBootloader/app/build/intermediates/pre-dexed/debug/classes-d39a0fd1430aa9abdff4d9bf600d55b287ec89c4.jar" />
     </item>
 
 </items>
