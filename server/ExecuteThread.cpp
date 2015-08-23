@@ -10,7 +10,6 @@ void ExecuteThread::run(void* obj)
 {
     while (1) {
         sleep(1);
-        cout << "ExecuteThread::run()" << endl;
     }
 }
 

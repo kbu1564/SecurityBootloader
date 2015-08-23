@@ -5,6 +5,8 @@
 #include "Packet.h"
 #include "PacketExecuteQueue.h"
 #include "PacketParser.h"
+#include "packet/FindDevicePacket.h"
+
 #include "Device.h"
 #include "Group.h"
 #include "Server.h"
@@ -55,6 +57,24 @@ bool Server::run(PacketExecuteQueue& q)
     return true;
 }
 
+// Heartbeat & Execute Threads
+int Server::createExecuteThread(PacketExecuteQueue& q)
+{
+    PingThread pt;
+    this->mThreadPool.add(pt.run, &mDevices);
+
+    // create ExecuteThread => (number of cpu core) * 2
+    long cpuCounts = sysconf(_SC_NPROCESSORS_ONLN);
+    long threadCounts = cpuCounts * 2;
+
+    for (long i = 0; i < threadCounts; i++) {
+        ExecuteThread et;
+        this->mThreadPool.add(et.run, &q);
+    }
+
+    return 0;
+}
+
 // 서버 생성
 int Server::createServer(const int port)
 {
@@ -63,12 +83,6 @@ int Server::createServer(const int port)
     this->__init();
     this->__setNonBlock(this->mSock);
     this->__initEpoll();
-
-    PingThread pt;
-    ExecuteThread et;
-
-    this->mThreadPool.add(pt.run, &mDevices);
-    this->mThreadPool.add(et.run, NULL);
 
     return 0;
 }
@@ -154,12 +168,13 @@ int Server::__setNonBlock(int sock)
 int HANDLER Server::__connect(epoll_event currEvent, PacketExecuteQueue& q)
 {
     for (;;) {
-        sockaddr  inAddr, sa;
-        socklen_t inLen = sizeof(inAddr);
+        sockaddr_in inAddr;
+        sockaddr    sa;
+        socklen_t   inLen = sizeof(inAddr);
         int infd;
         char hbuf[NI_MAXHOST], sbuf[NI_MAXSERV];
 
-        infd = accept4(this->mSock, &inAddr, &inLen, SOCK_NONBLOCK | SOCK_CLOEXEC);
+        infd = accept4(this->mSock, (sockaddr *)&inAddr, &inLen, SOCK_NONBLOCK | SOCK_CLOEXEC);
         if (infd == -1) {
             if (errno == EAGAIN || errno == EWOULDBLOCK)
                 break;
@@ -170,10 +185,17 @@ int HANDLER Server::__connect(epoll_event currEvent, PacketExecuteQueue& q)
         this->__setNonBlock(infd);
 
         int retval;
-        retval = getnameinfo(&sa, inLen, hbuf, sizeof(hbuf), sbuf, sizeof(sbuf), NI_NUMERICHOST | NI_NUMERICSERV);
-        if (retval == 0) {
-            // ** host = hbuf, serv = sbuf
-        }
+        //retval = getnameinfo(&sa, inLen, hbuf, sizeof(hbuf), sbuf, sizeof(sbuf), NI_NUMERICHOST | NI_NUMERICSERV);
+        //if (retval == 0) {
+        //    // ** host = hbuf, serv = sbuf
+        //}
+
+        Device dev;
+        dev.setIpAddr(inet_ntoa(inAddr.sin_addr));
+        dev.setPort(inAddr.sin_port);
+        dev.setDeviceType(UNKNOWN);
+        this->mDevices.push_back(dev);
+
         cout << "Server::__connect()" << endl;
 
         epoll_event event;
@@ -194,10 +216,16 @@ int HANDLER Server::__receive(epoll_event currEvent, PacketExecuteQueue& q)
         this->__disconnect(currEvent, q);
     } else {
         // NULL value setting
-        if (nread < MAX_BUFFER_SIZE) buf[nread] = 0;
+        //if (nread < MAX_BUFFER_SIZE) buf[nread] = 0;
 
         // ** recv event!!
         cout << "Server::__receive()" << endl;
+        cout << "Receive(" << nread << ") : " << buf << endl;
+
+        //PacketParser pp;
+        //Packet* packet = pp.decode(buf, nread);
+        //if (packet != NULL) {
+        //}
     }
     return 0;
 }

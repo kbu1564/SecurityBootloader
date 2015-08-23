@@ -36,6 +36,7 @@ public:
 
     int  createServer(const int port);
     int  shutdownServer();
+    int  createExecuteThread(PacketExecuteQueue& q);
     bool run(PacketExecuteQueue& q);
 private:
     // 객체 복사 방지

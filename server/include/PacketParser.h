@@ -4,9 +4,11 @@
 class PacketParser
 {
 public:
-    char*    encode(Packet& p);
-    Packet   decode(const char* buff);
+    Packet*  decode(const char* buff);
     Protocol decodeProtocol(const char* buff);
+
+private:
+    Packet*  __getPacketObject(Protocol protocol);
 };
 
 #endif

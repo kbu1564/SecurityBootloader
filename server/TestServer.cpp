@@ -15,6 +15,7 @@ int main(int argc, char* argv[])
     PacketExecuteQueue q;
 
     s.createServer(10880);
+    s.createExecuteThread(q);
     while (s.run(q)) {
     }
     s.shutdownServer();

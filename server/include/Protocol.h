@@ -1,6 +1,13 @@
 #ifndef PROTOCOL_H_
 #define PROTOCOL_H_
 
+/**
+ * Packet Structure
+ * ------------------------------------------------------------------------
+ * | Protocol(4byte) | Size(4byte) |           Data(Auto)                 |
+ * ------------------------------------------------------------------------
+ */
+
 enum Protocol
 {
 	/**
