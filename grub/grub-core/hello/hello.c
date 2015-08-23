@@ -128,14 +128,18 @@ hello_tcp_receive (grub_net_tcp_socket_t sock __attribute__ ((unused)), struct g
 
   char* ptr = (char *) nb->data;
   int protocol = *((int *) ptr);
-  int size = *((int *) ptr + 4);
-  char buff[512] = { 0, };
+
   switch (protocol) {
   case FIND_DEVICE:
     break;
   case BOOTING_DEVICE:
+    // 부팅 처리
     grub_net_tcp_close(sock, GRUB_NET_TCP_ABORT);
     grub_load_normal_mode();
+    break;
+  case SHUTDOWN_DEVICE:
+    // 종료 처리
+    grub_command_execute("exit", 0, 0);
     break;
   }
 
@@ -152,20 +156,32 @@ grub_cmd_hello (grub_extcmd_context_t ctxt __attribute__ ((unused)),
 		int argc __attribute__ ((unused)),
 		char **args __attribute__ ((unused)))
 {
-
   grub_network_boot_wait();
   
-  grub_printf ("%s\n", _("Send Network Packet Test"));
+  struct grub_net_card *card;
+  char buf[GRUB_NET_MAX_STR_HWADDR_LEN];
+  FOR_NET_CARDS(card)
+  {
+    grub_net_hwaddr_to_str (&card->default_address, buf);
+    break;
+  }
 
   char server[100];
   grub_strcpy(server, "119.205.252.21");
   grub_net_tcp_socket_t sock = grub_net_tcp_open(server, 10880, hello_tcp_receive, hello_tcp_err, hello_tcp_err, 0);
 
-  char packBuff[512] = { 0, };
+  char packBuff[512];
   int packSize = 0;
 
   // 장치 등록 요청 패킷 생성 부분
   // Protocol : SET_DEVICE
+  //------------------------------------------------------------------------------------------
+  int protocol = SET_DEVICE;
+
+  packSize = 8 + grub_strlen(buf) + 1;
+  grub_memcpy(packBuff + 0, &protocol, 4);
+  grub_memcpy(packBuff + 4, &packSize, 4);
+  grub_memcpy(packBuff + 8, buf, grub_strlen(buf) + 1);
 
   grub_err_t err;
   struct grub_net_buff *nb = grub_netbuff_alloc(GRUB_NET_TCP_RESERVE_SIZE + packSize);
@@ -183,12 +199,16 @@ grub_cmd_hello (grub_extcmd_context_t ctxt __attribute__ ((unused)),
       grub_memcpy(ptr, packBuff, packSize);
   }
   err = grub_net_send_tcp_packet(sock, nb, 1);
+  //------------------------------------------------------------------------------------------
 
   struct grub_net_buff *nnb = grub_netbuff_alloc(GRUB_NET_TCP_RESERVE_SIZE + 512);
-  grub_netbuff_reserve(nb, GRUB_NET_TCP_RESERVE_SIZE);
+  grub_netbuff_reserve(nnb, GRUB_NET_TCP_RESERVE_SIZE);
 
-  grub_net_recv_tcp_packet(nnb, sock->inf, &(sock->out_nla));
+  //grub_net_recv_tcp_packet(nnb, sock->inf, &(sock->out_nla));
   grub_netbuff_free(nnb);
+
+  grub_net_tcp_close(sock, GRUB_NET_TCP_ABORT);
+  grub_load_normal_mode();
 
   return 0;
 }
