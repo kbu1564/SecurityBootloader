@@ -5,10 +5,8 @@
 #include "Packet.h"
 #include "PacketExecuteQueue.h"
 #include "PacketParser.h"
-#include "packet/FindDevicePacket.h"
 
 #include "Device.h"
-#include "Group.h"
 #include "Server.h"
 
 #include "PingThread.h"
@@ -196,7 +194,7 @@ int HANDLER Server::__connect(epoll_event currEvent, PacketExecuteQueue& q)
         dev.setDeviceType(UNKNOWN);
         this->mDevices.push_back(dev);
 
-        //cout << "Server::__connect()" << endl;
+        cout << "Server::__connect()" << endl;
 
         epoll_event event;
         event.data.fd = infd;
@@ -219,12 +217,19 @@ int HANDLER Server::__receive(epoll_event currEvent, PacketExecuteQueue& q)
         //if (nread < MAX_BUFFER_SIZE) buf[nread] = 0;
 
         // ** recv event!!
-        //cout << "Server::__receive()" << endl;
+        cout << "Server::__receive()" << endl;
         //cout << "Receive(" << nread << ") : " << buf << endl;
 
         PacketParser pp;
         Packet* packet = pp.decode(buf, nread);
         if (packet != NULL) {
+            for (vector<Device>::iterator dev = this->mDevices.begin(); dev != this->mDevices.end(); dev++) {
+                if (dev->getSock() == currEvent.data.fd) {
+                    packet->setDevice(&(*dev));
+                    break;
+                }
+            }
+            packet->setGroups(&this->mGroups);
             q.push(packet);
         }
     }
@@ -249,7 +254,7 @@ int HANDLER Server::__disconnect(epoll_event currEvent, PacketExecuteQueue& q)
             break;
         }
     }
-    //cout << "Server::__disconnect()" << endl;
+    cout << "Server::__disconnect()" << endl;
 
     return 0;
 }

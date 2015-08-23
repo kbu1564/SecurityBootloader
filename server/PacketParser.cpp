@@ -3,7 +3,7 @@
 
 #include "Packet.h"
 #include "PacketParser.h"
-#include "packet/FindDevicePacket.h"
+#include "packet/SetDevicePacket.h"
 #include "packet/ShutdownDevicePacket.h"
 #include "packet/BootingDevicePacket.h"
 #include "packet/BootingRequestPacket.h"
@@ -11,8 +11,8 @@
 Packet* PacketParser::__getPacketObject(Protocol protocol)
 {
     switch (protocol) {
-    case FIND_DEVICE:
-        return new FindDevicePacket();
+    case SET_DEVICE:
+        return new SetDevicePacket();
     case SHUTDOWN_DEVICE:
         return new ShutdownDevicePacket();
     case BOOTING_DEVICE:
@@ -30,7 +30,7 @@ Packet* PacketParser::decode(char* buff, int buffSize)
 
     if (protocol > START_PROTOCOL && protocol < END_PROTOCOL) {
         Packet* packet = this->__getPacketObject(protocol);
-        if (packet != NULL && packet->parser(buff + 8, size) != -1)
+        if (packet != NULL && packet->parser(buff + 8, size - 8) != -1)
             return packet;
     }
 
@@ -41,8 +41,8 @@ Protocol PacketParser::decodeProtocol(char* buff)
 {
     int protocol = *((int *) buff);
     if (protocol > START_PROTOCOL && protocol < END_PROTOCOL)
-        return END_PROTOCOL;
+        return (Protocol) protocol;
 
-    return (Protocol) protocol; 
+    return END_PROTOCOL;
 }
 

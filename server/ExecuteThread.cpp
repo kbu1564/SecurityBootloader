@@ -4,7 +4,6 @@
 #include "Packet.h"
 #include "PacketExecuteQueue.h"
 #include "Device.h"
-#include "Group.h"
 #include "ExecuteThread.h"
 
 void ExecuteThread::run(void* obj)

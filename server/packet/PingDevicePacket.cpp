@@ -1,9 +1,10 @@
 #include "Global.h"
 #include "Protocol.h"
 #include "Packet.h"
+#include "Device.h"
 #include "packet/PingDevicePacket.h"
 
-int PingDevicePacket::parser(const char* buff, const int size)
+int PingDevicePacket::parser(char* buff, int size)
 {
     return 0;
 }
