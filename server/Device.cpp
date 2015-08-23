@@ -10,12 +10,15 @@ int Device::send(Packet* p)
 {
     int bufflen = 0;
     char* buff = p->encode(&bufflen);
+    cout << "sendto : " << buff << endl;
+    cout << this->getIpAddr() << ":" << this->getPort() << endl;
 
     if (this->mSock != 0) {
-        int nsend = 0;
-        while (nsend < bufflen) {
-            nsend += send(this->mSock, (char *)(buff + nsend), bufflen - nsend);
+        int nwrite = 0;
+        while (nwrite < bufflen) {
+            nwrite += write(this->mSock, (char *)(buff + nwrite), bufflen - nwrite);
         }
+        cout << "sendto : " << nwrite << "bytes" << endl;
     }
     return 0;
 }

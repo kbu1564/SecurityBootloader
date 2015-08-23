@@ -3,7 +3,7 @@
 #include "Packet.h"
 #include "packet/FindDevicePacket.h"
 
-int FindDevicePacket::parser(char* buff, const int size)
+int FindDevicePacket::parser(const char* buff, const int size)
 {
     return 0;
 }

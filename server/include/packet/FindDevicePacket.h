@@ -4,7 +4,9 @@
 class FindDevicePacket : public Packet
 {
 public:
-    int execute();
+    int   parser(const char* buff, const int size);
+    char* encode(int* size);
+    int   execute();
 };
 
 #endif

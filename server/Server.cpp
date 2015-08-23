@@ -61,7 +61,7 @@ bool Server::run(PacketExecuteQueue& q)
 int Server::createExecuteThread(PacketExecuteQueue& q)
 {
     PingThread pt;
-    this->mThreadPool.add(pt.run, &mDevices);
+    this->mThreadPool.add(pt.run, &this->mDevices);
 
     // create ExecuteThread => (number of cpu core) * 2
     long cpuCounts = sysconf(_SC_NPROCESSORS_ONLN);
@@ -191,6 +191,7 @@ int HANDLER Server::__connect(epoll_event currEvent, PacketExecuteQueue& q)
         //}
 
         Device dev;
+        dev.setSock(infd);
         dev.setIpAddr(inet_ntoa(inAddr.sin_addr));
         dev.setPort(inAddr.sin_port);
         dev.setDeviceType(UNKNOWN);

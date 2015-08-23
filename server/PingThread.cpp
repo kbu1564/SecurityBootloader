@@ -9,11 +9,12 @@
 
 void PingThread::run(void* obj)
 {
-    vector<Device> devs = *((vector<Device> *) obj);
+    vector<Device>* devs = (vector<Device> *) obj;
     while (1) {
         sleep(1);
-        if (devs.size() > 0) {
-            Device dev = devs[0];
+        cout << "Ping Thread!! : " << devs->size() << endl;
+        if (devs->size() > 0) {
+            Device &dev = (*devs)[0];
             dev.send(new FindDevicePacket());
         }
     }
