@@ -41,8 +41,8 @@ Protocol PacketParser::decodeProtocol(char* buff)
 {
     int protocol = *((int *) buff);
     if (protocol > START_PROTOCOL && protocol < END_PROTOCOL)
-        return END_PROTOCOL;
+        return (Protocol) protocol;
 
-    return (Protocol) protocol; 
+    return END_PROTOCOL;
 }
 
