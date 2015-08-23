@@ -1,0 +1,32 @@
+#include "Global.h"
+#include "Protocol.h"
+#include "Packet.h"
+#include "packet/PingDevicePacket.h"
+
+int PingDevicePacket::parser(const char* buff, const int size)
+{
+    return 0;
+}
+
+char* PingDevicePacket::encode(int* size)
+{
+    int ping = 0xFFFF;
+
+    int protocol = PING_DEVICE;
+    // 전체 패킷 길이
+    int bufflen = 8 + sizeof(ping);
+    char *buff = new char[100];
+    strncpy(buff + 0, (char *)&protocol, 4);
+    strncpy(buff + 0, (char *)&bufflen, 4);
+    strncpy(buff + 0, (char *)&ping, 4);
+
+    *size = bufflen;
+
+    return buff;
+}
+
+int PingDevicePacket::execute()
+{
+    return 0;
+}
+
