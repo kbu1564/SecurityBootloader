@@ -58,7 +58,7 @@
             android:process=":remote" >
         </service>
         <receiver
-            android:name=".RestartService"
+            android:name=".Network.RestartService"
             android:enabled="true"
             android:exported="false"
             android:label="RestartService"

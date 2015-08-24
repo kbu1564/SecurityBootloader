@@ -1,8 +1,5 @@
 package com.example.kimhajin.securitybootloader;
-/*
-지도 API 참고 사이트 : http://www.androidpub.com/2398318
-필요한 라이브러리 : 안드로이드 슈퍼 라이브러리 구글 서비스
-*/
+
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -15,8 +12,10 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.kimhajin.securitybootloader.Network.PersistentService;
+import com.example.kimhajin.securitybootloader.Network.RestartService;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -24,6 +23,16 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.UUID;
+
+/** 
+ * @FileName		: MainActivity.java 
+ * @Project		: SecurityBootloder 
+ * @Date			: 2015. 8. 24. 
+ * @작성자			: 주현 
+ * @프로그램 설명		: main 클레스
+ * @프로그램 기능		: 
+ * @변경이력		: 
+ */
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
 
@@ -45,20 +54,18 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         Log.d("MpMainActivity", "service start!!");
         //immortal service 등록
         intentMyService = new Intent(this, PersistentService.class);
-
         //========================================== 리시버 등록 ======================================== //
 
         // 실제로는 GPS 구현 없음 클래스 코드 간략화를 위해 GPS 관련 코드 삭제
         receiver = new RestartService();
-        try
-        {
+        try {
             IntentFilter mainFilter = new IntentFilter("com.hamon.GPSservice.sss");
             // 리시버 저장
             registerReceiver(receiver, mainFilter);
             // 서비스 시작
             startService(intentMyService);
-        }catch (Exception e){
-            Log.d("MyMainActivity", e.getMessage()+"");
+        } catch (Exception e) {
+            Log.d("MyMainActivity", e.getMessage() + "");
             e.printStackTrace();
         }
 
@@ -68,10 +75,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         //------------------------ button 팝업창 설정 --------------------------------//
         //팝업버튼 boot 설정
-        alert=(Button)findViewById(R.id.alert); //팝업버튼 아이디
+        alert = (Button) findViewById(R.id.alert); //팝업버튼 아이디
         alert.setOnClickListener(this);
         //팝업버튼 shutdown 설정
-        alert2=(Button)findViewById(R.id.alert2); //팝업버튼 아이디
+        alert2 = (Button) findViewById(R.id.alert2); //팝업버튼 아이디
         alert2.setOnClickListener(this);
         //-------------------------------------------------------------------------//
 
@@ -95,14 +102,16 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                            // no 버튼 누르면 팝업창 닫힘 !!
-
+                            Toast.makeText(getApplicationContext(), "취소되었습니다.", Toast.LENGTH_SHORT).show();
                         }
                     })
                     .setNeutralButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             //부팅 시작 Boot문장을 -> 중계서버로 보내주는 부분 구현 해야함 !!
-
+                            Intent intent = new Intent(getApplicationContext(), PersistentService.class);
+                            intent.putExtra("startBtn", true);
+                            startService(intent);
                         }
                     })
                     .show(); //팝업창 보여줌
@@ -115,12 +124,16 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             //전화면으로 이동
+                            Toast.makeText(getApplicationContext(), "취소되었습니다.", Toast.LENGTH_SHORT).show();
                         }
                     })
                     .setNeutralButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             //shutdown 문장을 -> 중계서버로 보내주는 부분 구현 해야함 !!
+                            Intent intent = new Intent(getApplicationContext(), PersistentService.class);
+                            intent.putExtra("cancelBtn", true);
+                            startService(intent);
                         }
                     })
                     .show(); //팝업창 보여줌
@@ -185,5 +198,4 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         return deviceId;
 
     }
-
 }

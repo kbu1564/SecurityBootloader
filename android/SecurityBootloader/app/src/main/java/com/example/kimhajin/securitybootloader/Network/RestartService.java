@@ -1,4 +1,4 @@
-package com.example.kimhajin.securitybootloader;
+package com.example.kimhajin.securitybootloader.Network;
 
 //Background Service 구현 부분
 
@@ -7,8 +7,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.example.kimhajin.securitybootloader.Network.PersistentService;
-
+/** 
+ * @FileName		: RestartService.java 
+ * @Project		: SecurityBootloder 
+ * @Date			: 2015. 8. 24. 
+ * @작성자			: 주현 
+ * @프로그램 설명		: 백그라운드에서 서비스가 종료될시 다시 서비스를 하는 클레스
+ * @프로그램 기능		: 
+ * @변경이력		: 
+ */
 public class RestartService extends BroadcastReceiver {
 
     public static final String ACTION_RESTART_PERSISTENTSERVICE

@@ -1,10 +1,4 @@
 package com.example.kimhajin.securitybootloader.Network;
-/*
- * Background service 구현 부분
- * RestartService class는 PersistenService에서 register or unregisterRestartAlarm이 호출됐을 때 call을 받게 된다.
-   이 class에서는 Broadcast의 이벤트를 감지해서 서비스를 다시 살리는 부분을 구현하고 있다.
-   cellphone의 전원이 공급되어 최초 부팅이 되었을 때에도 service가 작동하게도 구현되어 있다.
- */
 
 import android.app.AlarmManager;
 import android.app.Notification;
@@ -18,12 +12,10 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.util.Log;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.kimhajin.securitybootloader.MainActivity;
 import com.example.kimhajin.securitybootloader.R;
-import com.example.kimhajin.securitybootloader.RestartService;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -31,6 +23,16 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.ByteOrder;
+
+/** 
+ * @FileName		: PersistentService.java 
+ * @Project		: SecurityBootloder 
+ * @Date			: 2015. 8. 24. 
+ * @작성자			: 주현 
+ * @프로그램 설명		: 백그라운드에서 계속 중개서버와 통신을 하는 클레스
+ * @프로그램 기능		: 
+ * @변경이력		: 
+ */
 
 public class PersistentService extends Service implements Runnable {
 
@@ -44,24 +46,27 @@ public class PersistentService extends Service implements Runnable {
 
     private Handler mHandler;
     private boolean mIsRunning;
-    private int mStartId = 0;
 
     // TCP/IP
     private Socket socket = null;
-
     private DataInputStream dis = null;
     private DataOutputStream dos = null;
 
-    private TextView txtResponse;
+    private NetworkTask myClientTask = null;
 
     @Override
     public IBinder onBind(Intent intent) {
         Log.d("PersistentService", "onBind()");
         return null;
     }
+
+    /**
+     * @Method Name    :  onCreate
+     * @Method 기능    :  등록된 알람 제거
+     * @변경이력        :
+     */
     @Override
     public void onCreate() {
-        // 등록된 알람은 제거
         Log.d("PersistentService", "onCreate()");
         unregisterRestartAlarm();
         super.onCreate();
@@ -69,19 +74,23 @@ public class PersistentService extends Service implements Runnable {
 
     }
 
+    /**
+     * @Method Name    :  onDestroy
+     * @Method 기능    :  서비스가 죽었을때 알람 등록
+     * @변경이력        :
+     */
     @Override
     public void onDestroy() {
-
-        // 서비스가 죽었을때 알람 등록
         Log.d("PersistentService", "onDestroy()");
         registerRestartAlarm();
         super.onDestroy();
         mIsRunning = false;
     }
+
     /**
-     * (non-Javadoc)
-     * @see android.app.Service#onStart(android.content.Intent, int)
-     * 서비스가 시작되었을때 run()이 실행되기까지 delay를 handler를 통해서 주고 있다.
+     * @Method Name    :  onStart
+     * @Method 기능    :  서비스가 시작되었을때 run()이 실행되기까지 delay를 handler를 통해서 주고 있다.
+     * @변경이력        :
      */
     @Override
     public void onStart(Intent intent, int startId) {
@@ -95,9 +104,9 @@ public class PersistentService extends Service implements Runnable {
     }
 
     /**
-     * (non-Javadoc)
-     * @see java.lang.Runnable#run()
-     * 서비스가 돌아가고 있을때 실제로 내가 원하는 기능을 구현하는 부분
+     * @Method Name    :  run
+     * @Method 기능    :  서비스가 돌아가고 있을때 실제로 내가 원하는 기능을 구현하는 부분
+     * @변경이력        :
      */
     @Override
     public void run() {
@@ -108,6 +117,7 @@ public class PersistentService extends Service implements Runnable {
         {
             Log.d("PersistentService", "run(), mIsRunning is false");
             Log.d("PersistentService", "run(), alarm service end");
+
             return;
         } else {
             if(socket == null || !socket.isConnected()) {
@@ -116,7 +126,7 @@ public class PersistentService extends Service implements Runnable {
                 Log.d("PersistentService", "run(), alarm repeat after five minutes");
 
                 Toast.makeText(getApplicationContext(), "network start", Toast.LENGTH_SHORT).show();
-                NetworkTask myClientTask = new NetworkTask("119.205.252.21", 10880);
+                myClientTask = new NetworkTask("119.205.252.21", 10880);
                 myClientTask.execute();
                 Toast.makeText(getApplicationContext(), "network finish", Toast.LENGTH_SHORT).show();
 
@@ -127,10 +137,40 @@ public class PersistentService extends Service implements Runnable {
     }
 
     /**
-     * 서비스가 시스템에 의해서 또는 강제적으로 종료되었을 때 호출되어
-     * 알람을 등록해서 10초 후에 서비스가 실행되도록 한다.
+     * @Method Name    :  onStartCommand
+     * @Method 기능    :  버튼 클릭에 따라 중개서버에 적절한 메시지를 송신
+     * @변경이력        :
      */
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        boolean isStartBtn = intent.getBooleanExtra("startBtn", false);
+        boolean isCloseBtn = intent.getBooleanExtra("cancelBtn", false);
 
+        if(isStartBtn){
+
+            myClientTask.sendMessage(Protocol.BOOTING_DEVICE);
+            //Toast.makeText(getApplicationContext(), "startBtn", Toast.LENGTH_LONG).show();
+
+            isStartBtn = false;
+        }
+        if(isCloseBtn){
+
+            myClientTask.sendMessage(Protocol.SHUTDOWN_DEVICE);
+
+            //Toast.makeText(getApplicationContext(), "cancelBtn", Toast.LENGTH_LONG).show();
+
+            isCloseBtn = false;
+        }
+
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    /**
+     * @Method Name    :  unregisterRestartAlarm
+     * @Method 기능    :  서비스가 시스템에 의해서 또는 강제적으로 종료되었을 때 호출되어
+     *                      알람을 등록해서 10초 후에 서비스가 실행되도록 한다.
+     * @변경이력        :
+     */
     private void registerRestartAlarm() {
 
         Log.d("PersistentService", "registerRestartAlarm()");
@@ -145,10 +185,12 @@ public class PersistentService extends Service implements Runnable {
         AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
         am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, firstTime, REBOOT_DELAY_TIMER, sender);
     }
-    /**
-     * 기존 등록되어있는 알람을 해제한다.
-     */
 
+    /**
+     * @Method Name    :  unregisterRestartAlarm
+     * @Method 기능    :  기존 등록되어있는 알람을 해제한다.
+     * @변경이력        :
+     */
     private void unregisterRestartAlarm() {
 
         Log.d("PersistentService", "unregisterRestartAlarm()");
@@ -161,12 +203,8 @@ public class PersistentService extends Service implements Runnable {
     }
 
     /**
-     * @FileName        : PersistentService.java
-     * @Project        : notifiyConnection
-     * @Date            : 2015. 8. 23.
-     * @작성자            : 주현
-     * @프로그램 설명        : 소켓 연결 알림
-     * @프로그램 기능        : 소켓 연결이 되었을 때 알림 메시지를 사용자에게 보여준다.
+     * @Method Name    :  notifiyConnection
+     * @Method 기능    :  소켓 연결이 되었을 때 알림 메시지를 사용자에게 보여준다.
      * @변경이력        :
      */
     private void notifiyConnection(){
@@ -199,7 +237,7 @@ public class PersistentService extends Service implements Runnable {
     }
 
     /**
-     * @FileName        : MainActivity.java
+     * @FileName        : PersistentService.java
      * @Project        : NetworkTask
      * @Date            : 2015. 8. 23.
      * @작성자            : 주현
@@ -345,6 +383,10 @@ public class PersistentService extends Service implements Runnable {
                 // 부팅상태값 요청
                 case Protocol.BOOTING_REQUEST:
                     // 앱 실행!
+                    Log.d("Protocol", "Booting Request");
+                    Log.e("Protocol", "Booting Request");
+
+                    sendMessage(Protocol.BOOTING_DEVICE);
 
                     break;
             }
@@ -489,7 +531,5 @@ public class PersistentService extends Service implements Runnable {
 
             super.onPostExecute(result);
         }
-
     }
 }
-
