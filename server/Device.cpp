@@ -14,6 +14,10 @@ int Device::send(Packet* p)
         int nwrite = write(this->mSock, buff, bufflen);
         delete buff;
 
+<<<<<<< HEAD
+=======
+        cout << "Sendto(" << bufflen << ") : " << nwrite << "bytes!!" << endl;
+>>>>>>> develop
         return nwrite;
     }
     return -1;

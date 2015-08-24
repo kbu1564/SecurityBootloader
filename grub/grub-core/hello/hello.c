@@ -114,13 +114,20 @@ grub_send_protocol_packet (grub_net_tcp_socket_t sock, int protocol, char* buf, 
     if (err)
     {
       grub_netbuff_free(nb);
+<<<<<<< HEAD
       //grub_net_tcp_close(sock, GRUB_NET_TCP_ABORT);
+=======
+      grub_net_tcp_close(sock, GRUB_NET_TCP_ABORT);
+>>>>>>> develop
       return err;
     }
     grub_memcpy(ptr, packBuff, packSize);
   }
   err = grub_net_send_tcp_packet(sock, nb, 1);
+<<<<<<< HEAD
   grub_printf ("grub_send_protocol_packet\n");
+=======
+>>>>>>> develop
 
   return err;
 }
@@ -157,7 +164,10 @@ hello_tcp_receive (grub_net_tcp_socket_t sock __attribute__ ((unused)), struct g
     break;
   case SHUTDOWN_DEVICE:
     // 종료 처리
+<<<<<<< HEAD
     grub_net_tcp_close(sock, GRUB_NET_TCP_ABORT);
+=======
+>>>>>>> develop
     grub_command_execute("exit", 0, 0);
     break;
   }
@@ -210,8 +220,11 @@ grub_cmd_hello (grub_extcmd_context_t ctxt __attribute__ ((unused)),
   grub_send_protocol_packet(sock, protocol, sbuf, 4 + grub_strlen(buf) + 1);
   //------------------------------------------------------------------------------------------
 
+<<<<<<< HEAD
   grub_sleep(1);
 
+=======
+>>>>>>> develop
   // 부팅 여부를 묻기 위한 패킷 전송
   // Protocol : BOOTING_REQUEST
   //------------------------------------------------------------------------------------------
@@ -221,7 +234,10 @@ grub_cmd_hello (grub_extcmd_context_t ctxt __attribute__ ((unused)),
 
   struct grub_net_buff *nnb = grub_netbuff_alloc(GRUB_NET_TCP_RESERVE_SIZE + 512);
   grub_netbuff_reserve(nnb, GRUB_NET_TCP_RESERVE_SIZE);
+<<<<<<< HEAD
   grub_netbuff_put(nnb, 512);
+=======
+>>>>>>> develop
 
   grub_net_recv_tcp_packet(nnb, sock->inf, &(sock->out_nla));
 
