@@ -1,15 +1,5 @@
 package com.example.testclient;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.Socket;
-import java.net.UnknownHostException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,12 +10,22 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.nio.ByteOrder;
+
 public class MainActivity extends Activity {
 
     private TextView txtResponse;
     private EditText edtTextAddress, edtTextPort;
     private Button btnConnect, btnClear;
+
     private Socket socket = null;
+    private DataInputStream dis = null;
+    private DataOutputStream dos = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,34 +140,59 @@ public class MainActivity extends Activity {
 
         /** 
          * @Method Name	:  connection
-         * @Method 기능	:  중개서버로 부터 메시지 수신
+         * @Method 기능	:  정상적으로 소켓이 연결된 경우 중개 서버로부터 메시지 수신
          * @변경이력		: 
          */
         private void connection()
         {
             try{
-                DataInputStream dis = new DataInputStream(socket.getInputStream());
+                dis = new DataInputStream(socket.getInputStream());
+                dos = new DataOutputStream(socket.getOutputStream());
 
-                byte[] msg = new byte[1024];
-
-                // 메지시를 읽어 바이트 배열에 저장
-                dis.read(msg, 0, msg.length);
-
-                // 받은 메시지를 처리 한다.
-                processMsg(msg);
             } catch (UnknownHostException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            Thread th = new Thread(new Runnable()
+            {
+                @Override
+                public void run() {
+
+                    while(true)
+                    {
+                        try {
+                            byte[] msg = new byte[1024];
+
+                            // 메지시를 읽어 바이트 배열에 저장
+                            dis.read(msg, 0, msg.length);
+
+                            // 받은 메시지를 처리 한다.
+                            receiveMsg(msg);
+                        } catch (IOException e1) {
+                            try{
+                                dos.close();
+                                dis.close();
+                                socket.close();
+                            }catch(IOException e2){
+                                Log.e("ERROR::connection()", e2.getMessage());
+                            }
+                            break;
+                        }
+                    }
+                }
+            });
+
+            th.start();
         }
 
         /** 
          * @Method Name	:  processMsg
-         * @Method 기능	:  전달 받은 메시지 처리
+         * @Method 기능	:  수신 메시지를 프로토콜 규약에 맞제 처리
          * @변경이력		: 
          */
-        private void processMsg(byte[] message)
+        private void receiveMsg(byte[] message)
         {
             int protocol = ByteType.byteToInt(getbytes(message, 0, 4), ByteOrder.LITTLE_ENDIAN);
             int size = ByteType.byteToInt(getbytes(message, 4, 4), ByteOrder.LITTLE_ENDIAN);
@@ -175,32 +200,14 @@ public class MainActivity extends Activity {
 
             switch (protocol) {
 
+                // HeartBeat 체크용 프로토콜
                 case Protocol.PING_DEVICE:
                     //data = ByteType.byteToString(getbytes(message, 8, size - 8), ByteOrder.LITTLE_ENDIAN);
 
                     break;
 
-                case Protocol.SET_DEVICE:
-
-                    break;
-
-                case Protocol.FIND_DEVICE:
-
-                    break;
-
-                case Protocol.SHUTDOWN_DEVICE:
-
-                    break;
-
-                case Protocol.BOOTING_DEVICE:
-
-                    break;
-
+                // 부팅상태값 요청
                 case Protocol.BOOTING_REQUEST:
-
-                    break;
-
-                case Protocol.END_PROTOCOL:
 
                     break;
             }
@@ -212,6 +219,34 @@ public class MainActivity extends Activity {
 
             response = sb.toString();
 
+        }
+
+        private void sendMessage(int protocol)
+        {
+
+            switch (protocol)
+            {
+
+                // HeartBeat 응답에 대한 프로토콜
+                case Protocol.PONG_DEVICE:
+
+                    break;
+
+                // 스마트폰의 서비스가 실행 되었을 때 자신이 제어할 대상을 등록 대기상태 요청
+                case Protocol.SET_DEVICE:
+
+                    break;
+
+                // Phone => Grub : 장치 강제 종료
+                case Protocol.SHUTDOWN_DEVICE:
+
+                    break;
+
+                // Phone => Grub : 장치 부팅 진행
+                case Protocol.BOOTING_DEVICE:
+
+                    break;
+            }
         }
 
         /** 
