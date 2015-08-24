@@ -385,9 +385,6 @@ public class PersistentService extends Service implements Runnable {
                     // 앱 실행!
                     Log.d("Protocol", "Booting Request");
                     Log.e("Protocol", "Booting Request");
-
-                    sendMessage(Protocol.BOOTING_DEVICE);
-
                     break;
             }
 
