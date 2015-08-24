@@ -7,8 +7,11 @@ package com.example.kimhajin.securitybootloader.Network;
  */
 
 import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -18,6 +21,8 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.kimhajin.securitybootloader.MainActivity;
+import com.example.kimhajin.securitybootloader.R;
 import com.example.kimhajin.securitybootloader.RestartService;
 
 import java.io.DataInputStream;
@@ -35,7 +40,7 @@ public class PersistentService extends Service implements Runnable {
     private static final int REBOOT_DELAY_TIMER = 10 * 1000;
 
     // 서비스 실행 시간
-    private static final int LOCATION_UPDATE_DELAY = 10 * 1000;
+    private static final int LOCATION_UPDATE_DELAY = 3 * 1000;
 
     private Handler mHandler;
     private boolean mIsRunning;
@@ -156,6 +161,44 @@ public class PersistentService extends Service implements Runnable {
     }
 
     /**
+     * @FileName        : PersistentService.java
+     * @Project        : notifiyConnection
+     * @Date            : 2015. 8. 23.
+     * @작성자            : 주현
+     * @프로그램 설명        : 소켓 연결 알림
+     * @프로그램 기능        : 소켓 연결이 되었을 때 알림 메시지를 사용자에게 보여준다.
+     * @변경이력        :
+     */
+    private void notifiyConnection(){
+
+        // 노티피케이션
+        NotificationManager mManager = (NotificationManager)getSystemService((Context.NOTIFICATION_SERVICE));
+        // 노티피케이션 객체 생성
+        Notification n = new Notification();
+        // 아이콘 서정
+        n.icon = R.drawable.ic_cast_dark;
+        // 발생 즉시 잠시 보여질 내용
+        n.tickerText = "New maessge";
+        // 발생 시간
+        n.when = System.currentTimeMillis();
+        // 발생 수량 설정
+        n.number = 0;
+        // 알람 해제 방법을 설정
+        n.flags = Notification.FLAG_AUTO_CANCEL;
+        // 확장된 상태바에 나타낼 제목과 내용
+        final String contentTitle = "Security Bootloater";
+        final String contentText = "중개서버와 연결이 되었습니다. 확인하시겠습니까?";
+        // 확장된 상태바에 놀렀을때 이동할 액티비티 설정
+        Intent i = new Intent(getApplicationContext(), MainActivity.class);
+        PendingIntent pi = PendingIntent.getActivities(this,0, new Intent[]{i}, 0);
+        // 확장된 상태 표시줄 표시 설정
+        n.setLatestEventInfo(getApplicationContext(), contentTitle, contentText, pi);
+        //Notification 발생
+        mManager.notify(0, n);
+
+    }
+
+    /**
      * @FileName        : MainActivity.java
      * @Project        : NetworkTask
      * @Date            : 2015. 8. 23.
@@ -216,8 +259,10 @@ public class PersistentService extends Service implements Runnable {
                 socket = new Socket(dstAddress, dstPort);
 
                 // 정상적으로 소켓이 연결되었을 경우
-                if (socket != null)
+                if (socket != null) {
+                    notifiyConnection();
                     connection();
+                }
 
             } catch (Exception e) {
                 if (connCount < 5)

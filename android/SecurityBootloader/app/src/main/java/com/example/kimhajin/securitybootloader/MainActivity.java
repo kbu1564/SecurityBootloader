@@ -4,9 +4,6 @@ package com.example.kimhajin.securitybootloader;
 필요한 라이브러리 : 안드로이드 슈퍼 라이브러리 구글 서비스
 */
 import android.app.AlertDialog;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -65,33 +62,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             e.printStackTrace();
         }
 
-        //========================================== 노티피케이션 부분 ======================================== //
+        //========================================== 스플레시 시작 ======================================== //
         startActivity(new Intent(this, Splash.class));
-        // 노티피케이션
-        NotificationManager mManager = (NotificationManager)getSystemService((Context.NOTIFICATION_SERVICE));
-        // 노티피케이션 객체 생성
-        Notification n = new Notification();
-        // 아이콘 서정
-        n.icon = R.drawable.ic_cast_dark;
-        // 발생 즉시 잠시 보여질 내용
-        n.tickerText = "New maessge";
-        // 발생 시간
-        n.when = System.currentTimeMillis();
-        // 발생 수량 설정
-        n.number = 0;
-        // 알람 해제 방법을 설정
-        n.flags = Notification.FLAG_AUTO_CANCEL;
-        // 확장된 상태바에 나타낼 제목과 내용
-        final String contentTitle = "Now booting start !!";
-        final String contentText = "컴퓨터부팅이 감지되었습니다. 확인하시겠습니까??";
-        // 확장된 상태바에 놀렀을때 이동할 액티비티 설정
-        Intent i = new Intent(getApplicationContext(), MainActivity.class);
-        PendingIntent pi = PendingIntent.getActivities(this,0, new Intent[]{i}, 0);
-        // 확장된 상태 표시줄 표시 설정
-        n.setLatestEventInfo(getApplicationContext(),contentTitle,contentText,pi);
-        //Notification 발생
-        mManager.notify(0, n);
-        //========================================== 노티피케이션 끝 ======================================== //
 
 
         //------------------------ button 팝업창 설정 --------------------------------//
