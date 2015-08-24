@@ -1,17 +1,6 @@
 package com.example.kimhajin.securitybootloader;
-<<<<<<< HEAD
 
 import android.app.AlertDialog;
-=======
-/*
-지도 API 참고 사이트 : http://www.androidpub.com/2398318
-필요한 라이브러리 : 안드로이드 슈퍼 라이브러리 구글 서비스
-*/
-import android.app.AlertDialog;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
->>>>>>> 040e418b0823302ba703c478cc919b2ae497861e
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -23,7 +12,6 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-<<<<<<< HEAD
 import android.widget.Toast;
 
 import com.example.kimhajin.securitybootloader.Network.PersistentService;
@@ -55,33 +43,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     // button nameing
     private Button alert;
     private Button alert2;
-=======
-
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-
-import java.util.UUID;
-
-public class MainActivity extends FragmentActivity implements View.OnClickListener {
-
-    private GoogleMap googleMap;
-    // Background Service
-    BroadcastReceiver receiver;
-    Intent intentMyService;
-    // button nameing
-    Button alert;
-    Button alert2;
->>>>>>> 040e418b0823302ba703c478cc919b2ae497861e
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //app 실행시 Splash 먼저 실행되게 함. /
         Log.v("msss", "deviceID" + getDevicesUUID(this));
-<<<<<<< HEAD
 
         //Background service //
         Log.d("MpMainActivity", "service start!!");
@@ -106,56 +73,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         startActivity(new Intent(this, Splash.class));
 
 
-=======
-        //========================================== 노티피케이션 부분 ======================================== //
-        startActivity(new Intent(this, Splash.class));
-        // 노티피케이션
-        NotificationManager mManager = (NotificationManager)getSystemService((Context.NOTIFICATION_SERVICE));
-        // 노티피케이션 객체 생성
-        Notification n = new Notification();
-        // 아이콘 서정
-        n.icon = R.drawable.ic_cast_dark;
-        // 발생 즉시 잠시 보여질 내용
-        n.tickerText = "New maessge";
-        // 발생 시간
-        n.when = System.currentTimeMillis();
-        // 발생 수량 설정
-        n.number = 0;
-        // 알람 해제 방법을 설정
-        n.flags = Notification.FLAG_AUTO_CANCEL;
-        // 확장된 상태바에 나타낼 제목과 내용
-        final String contentTitle = "Now booting start !!";
-        final String contentText = "컴퓨터부팅이 감지되었습니다. 확인하시겠습니까??";
-        // 확장된 상태바에 놀렀을때 이동할 액티비티 설정
-        Intent i = new Intent(getApplicationContext(), MainActivity.class);
-        PendingIntent pi = PendingIntent.getActivities(this,0, new Intent[]{i}, 0);
-        // 확장된 상태 표시줄 표시 설정
-        n.setLatestEventInfo(getApplicationContext(),contentTitle,contentText,pi);
-        //Notification 발생
-        mManager.notify(0, n);
-        //========================================== 노티피케이션 끝 ======================================== //
-
-        //Background service //
-        Log.d("MpMainActivity", "service start!!");
-        //immortal service 등록
-        intentMyService = new Intent(this, PersistentService.class);
-
-        // 리시버 등록
-        // 실제로는 GPS 구현 없음 클래스 코드 간략화를 위해 GPS 관련 코드 삭제
-        receiver = new RestartService();
-        try
-        {
-            IntentFilter mainFilter = new IntentFilter("com.hamon.GPSservice.sss");
-            // 리시버 저장
-            registerReceiver(receiver, mainFilter);
-            // 서비스 시작
-            startService(intentMyService);
-        }catch (Exception e){
-            Log.d("MyMainActivity", e.getMessage()+"");
-            e.printStackTrace();
-        }
-
->>>>>>> 040e418b0823302ba703c478cc919b2ae497861e
         //------------------------ button 팝업창 설정 --------------------------------//
         //팝업버튼 boot 설정
         alert = (Button) findViewById(R.id.alert); //팝업버튼 아이디
@@ -185,24 +102,16 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                            // no 버튼 누르면 팝업창 닫힘 !!
-<<<<<<< HEAD
                             Toast.makeText(getApplicationContext(), "취소되었습니다.", Toast.LENGTH_SHORT).show();
-=======
-
->>>>>>> 040e418b0823302ba703c478cc919b2ae497861e
                         }
                     })
                     .setNeutralButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             //부팅 시작 Boot문장을 -> 중계서버로 보내주는 부분 구현 해야함 !!
-<<<<<<< HEAD
                             Intent intent = new Intent(getApplicationContext(), PersistentService.class);
                             intent.putExtra("startBtn", true);
                             startService(intent);
-=======
-
->>>>>>> 040e418b0823302ba703c478cc919b2ae497861e
                         }
                     })
                     .show(); //팝업창 보여줌
@@ -222,12 +131,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             //shutdown 문장을 -> 중계서버로 보내주는 부분 구현 해야함 !!
-<<<<<<< HEAD
                             Intent intent = new Intent(getApplicationContext(), PersistentService.class);
                             intent.putExtra("cancelBtn", true);
                             startService(intent);
-=======
->>>>>>> 040e418b0823302ba703c478cc919b2ae497861e
                         }
                     })
                     .show(); //팝업창 보여줌
@@ -292,8 +198,4 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         return deviceId;
 
     }
-<<<<<<< HEAD
-=======
-
->>>>>>> 040e418b0823302ba703c478cc919b2ae497861e
 }

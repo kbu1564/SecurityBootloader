@@ -4,13 +4,8 @@
     android:versionCode="1"
     android:versionName="1.0" >
     <uses-sdk
-<<<<<<< HEAD
         android:minSdkVersion="16"
         android:targetSdkVersion="22" />
-=======
-        android:minSdkVersion="8"
-        android:targetSdkVersion="16" />
->>>>>>> 040e418b0823302ba703c478cc919b2ae497861e
 
     <permission android:name="com.example.kimhajin.securitybootloader.permission.MAPS_RECEIVE" />
 
@@ -58,20 +53,12 @@
         </activity>
         <!-- GPS 서비스 -->
         <service
-<<<<<<< HEAD
             android:name=".Network.PersistentService"
-=======
-            android:name=".PersistentService"
->>>>>>> 040e418b0823302ba703c478cc919b2ae497861e
             android:enabled="true"
             android:process=":remote" >
         </service>
         <receiver
-<<<<<<< HEAD
             android:name=".Network.RestartService"
-=======
-            android:name=".RestartService"
->>>>>>> 040e418b0823302ba703c478cc919b2ae497861e
             android:enabled="true"
             android:exported="false"
             android:label="RestartService"
