@@ -106,7 +106,6 @@ grub_send_protocol_packet (grub_net_tcp_socket_t sock, int protocol, char* buf, 
   grub_memcpy(packBuff + 4, &packSize, 4);
   grub_memcpy(packBuff + 8, buf, bufSize);
 
-
   struct grub_net_buff *nb = grub_netbuff_alloc(GRUB_NET_TCP_RESERVE_SIZE + packSize);
   if (nb) {
     grub_netbuff_reserve(nb, GRUB_NET_TCP_RESERVE_SIZE);
@@ -189,7 +188,7 @@ grub_cmd_hello (grub_extcmd_context_t ctxt __attribute__ ((unused)),
 
   char serve[100];
   grub_strcpy(serve, "119.205.252.21");
-  int port = 10883;
+  int port = 10880;
 
   //grub_printf ("MAC Addr : %s\n", buf);
   grub_net_tcp_socket_t sock = grub_net_tcp_open(serve, port, hello_tcp_receive, hello_tcp_err, hello_tcp_err, 0);
@@ -219,7 +218,7 @@ grub_cmd_hello (grub_extcmd_context_t ctxt __attribute__ ((unused)),
   struct grub_net_buff *nnb = grub_netbuff_alloc(GRUB_NET_TCP_RESERVE_SIZE + 512);
   grub_netbuff_reserve(nnb, GRUB_NET_TCP_RESERVE_SIZE);
 
-  grub_net_recv_tcp_packet(nnb, sock->inf, &(sock->out_nla));
+  //grub_net_recv_tcp_packet(nnb, sock->inf, &(sock->out_nla));
 
   grub_netbuff_free(nnb);
   grub_net_tcp_close(sock, GRUB_NET_TCP_ABORT);
