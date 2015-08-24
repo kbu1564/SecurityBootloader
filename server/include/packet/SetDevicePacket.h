@@ -3,6 +3,9 @@
 
 class SetDevicePacket : public Packet
 {
+private:
+    string mMacAddr;
+    int    mDeviceType;
 public:
     int   parser(char* buff, int size);
     char* encode(int* size);
