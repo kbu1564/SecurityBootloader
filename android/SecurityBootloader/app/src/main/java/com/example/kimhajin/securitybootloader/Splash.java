@@ -1,12 +1,19 @@
 package com.example.kimhajin.securitybootloader;
+// Splash 구현 부분 //
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.os.Handler;
 import android.app.Activity;
+import android.os.Bundle;
+import android.os.Handler;
 
+/** 
+ * @FileName		: Splash.java 
+ * @Project		: SecurityBootloder 
+ * @Date			: 2015. 8. 24. 
+ * @작성자			: 주현 
+ * @프로그램 설명		: 어플리케이션이 최초 실행 되었을 때의 화면을 출력하는 클레스
+ * @프로그램 기능		: 
+ * @변경이력		: 
+ */
 public class Splash extends Activity {
 
     @Override
@@ -21,27 +28,5 @@ public class Splash extends Activity {
                 finish(); //3s후 이미지 닫기
             }
         },2500);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_splash, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }
