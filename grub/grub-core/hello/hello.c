@@ -17,6 +17,14 @@
  *  You should have received a copy of the GNU General Public License
  *  along with GRUB.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include <grub/DeviceType.h>
+#include <grub/Protocol.h>
+#include <grub/types.h>
+#include <grub/err.h>
+#include <grub/extcmd.h>
+#include <grub/i18n.h>
+#include <grub/priority_queue.h>
+
 #include <grub/net.h>
 #include <grub/net/arp.h>
 #include <grub/net/tcp.h>
@@ -36,12 +44,39 @@
 #include <grub/bufio.h>
 #include <grub/kernel.h>
 
-#include <grub/types.h>
-#include <grub/err.h>
-#include <grub/extcmd.h>
-#include <grub/i18n.h>
-
 GRUB_MOD_LICENSE ("GPLv3+");
+
+struct grub_net_tcp_socket
+{
+  struct grub_net_tcp_socket *next;
+  struct grub_net_tcp_socket **prev;
+
+  int established;
+  int i_closed;
+  int they_closed;
+  int in_port;
+  int out_port;
+  int errors;
+  int they_reseted;
+  int i_reseted;
+  int i_stall;
+  grub_uint32_t my_start_seq;
+  grub_uint32_t my_cur_seq;
+  grub_uint32_t their_start_seq;
+  grub_uint32_t their_cur_seq;
+  grub_uint16_t my_window;
+  struct unacked *unack_first;
+  struct unacked *unack_last;
+  grub_err_t (*recv_hook) (grub_net_tcp_socket_t sock, struct grub_net_buff *nb, void *recv);
+  void (*error_hook) (grub_net_tcp_socket_t sock, void *recv);
+  void (*fin_hook) (grub_net_tcp_socket_t sock, void *recv);
+  void *hook_data;
+  grub_net_network_level_address_t out_nla;
+  grub_net_link_level_address_t ll_target_addr;
+  struct grub_net_network_level_interface *inf;
+  grub_net_packets_t packs;
+  grub_priority_queue_t pq;
+};
 
 /* Load the normal mode module and execute the normal mode if possible.  */
 static void
@@ -57,29 +92,46 @@ grub_load_normal_mode (void)
   grub_command_execute ("normal", 0, 0);
 }
 
+static grub_err_t
+grub_send_protocol_packet (grub_net_tcp_socket_t sock, int protocol, char* buf, int bufSize)
+{
+  static grub_err_t err;
+  if (!sock) {
+      return err;
+  }
+
+  char packBuff[512];
+  int packSize = 8 + bufSize;
+  grub_memcpy(packBuff + 0, &protocol, 4);
+  grub_memcpy(packBuff + 4, &packSize, 4);
+  grub_memcpy(packBuff + 8, buf, bufSize);
+
+  struct grub_net_buff *nb = grub_netbuff_alloc(GRUB_NET_TCP_RESERVE_SIZE + packSize);
+  if (nb) {
+    grub_netbuff_reserve(nb, GRUB_NET_TCP_RESERVE_SIZE);
+    grub_uint8_t *ptr = nb->tail;
+    err = grub_netbuff_put(nb, packSize);
+    if (err)
+    {
+      grub_netbuff_free(nb);
+      grub_net_tcp_close(sock, GRUB_NET_TCP_ABORT);
+      return err;
+    }
+    grub_memcpy(ptr, packBuff, packSize);
+  }
+  err = grub_net_send_tcp_packet(sock, nb, 1);
+
+  return err;
+}
+
 /* Wait GRUB Network Boot */
 static void
 grub_network_boot_wait (void)
 {
-  int n = 0;
-
   grub_cls ();
 
-  grub_setcolorstate (GRUB_TERM_COLOR_HIGHLIGHT);
   grub_printf ("Welcome to GRUB Network!\n");
   grub_printf ("Security Mulit-Bootloader @TNTeam #1st NHN CodeCamp\n\n");
-
-  grub_printf ("Wait");
-  while(n < 10)
-  {
-
-    grub_sleep (1);
-    grub_printf (".");
-
-    n++;
-  }
-
-  grub_cls ();
 }
 
 static grub_err_t
@@ -90,14 +142,29 @@ hello_tcp_receive (grub_net_tcp_socket_t sock __attribute__ ((unused)), struct g
   if (!sock)
   {
       grub_netbuff_free(nb);
-      return GRUB_ERR_NONE;
+      return err;
   }
 
-  return err;
+  char* ptr = (char *) nb->data;
+  int protocol = *((int *) ptr);
+
+  switch (protocol) {
+  case BOOTING_DEVICE:
+    // 부팅 처리
+    grub_net_tcp_close(sock, GRUB_NET_TCP_ABORT);
+    grub_load_normal_mode();
+    break;
+  case SHUTDOWN_DEVICE:
+    // 종료 처리
+    grub_command_execute("exit", 0, 0);
+    break;
+  }
+
+  return GRUB_ERR_NONE;
 }
 
 static void
-hello_tcp_err (grub_net_tcp_socket_t sock __attribute__ ((unused)), void *f __attribute__ ((unused)))
+hello_tcp_err (grub_net_tcp_socket_t sock __attribute__ ((unused)), void* f __attribute__ ((unused)))
 {
 }
 
@@ -106,34 +173,55 @@ grub_cmd_hello (grub_extcmd_context_t ctxt __attribute__ ((unused)),
 		int argc __attribute__ ((unused)),
 		char **args __attribute__ ((unused)))
 {
-
   grub_network_boot_wait();
-  
-  grub_printf ("%s\n", _("Send Network Packet Test"));
-
-  char server[100];
-  grub_strcpy(server, "119.205.252.21");
-
-  grub_net_tcp_socket_t sock = grub_net_tcp_open(server, 10880, hello_tcp_receive, hello_tcp_err, hello_tcp_err, 0);
-
-  grub_err_t err;
-  struct grub_net_buff *nb = grub_netbuff_alloc(GRUB_NET_TCP_RESERVE_SIZE + grub_strlen("grub -> server test") + 1);
-  if (nb)
+ 
+  // 네트워크 인터페이스 정보를 얻음
+  //------------------------------------------------------------------------------------------
+  struct grub_net_card *card;
+  char buf[GRUB_NET_MAX_STR_HWADDR_LEN];
+  FOR_NET_CARDS(card)
   {
-      grub_netbuff_reserve(nb, GRUB_NET_TCP_RESERVE_SIZE);
-      grub_uint8_t *ptr = nb->tail;
-      err = grub_netbuff_put(nb, grub_strlen("grub -> server test") + 1);
-      if (err)
-      {
-          grub_netbuff_free(nb);
-          grub_net_tcp_close(sock, GRUB_NET_TCP_ABORT);
-          return err;
-      }
-      grub_memcpy(ptr, "grub -> server test", grub_strlen("grub -> server test") + 1);
+    grub_net_hwaddr_to_str (&card->default_address, buf);
+    break;
   }
-  err = grub_net_send_tcp_packet(sock, nb, 1);
-  grub_net_tcp_close(sock, GRUB_NET_TCP_ABORT);
+  //------------------------------------------------------------------------------------------
 
+  char serve[100];
+  grub_strcpy(serve, "119.205.252.21");
+  int port = 10880;
+
+  //grub_printf ("MAC Addr : %s\n", buf);
+  grub_net_tcp_socket_t sock = grub_net_tcp_open(serve, port, hello_tcp_receive, hello_tcp_err, hello_tcp_err, 0);
+  if (!sock) {
+    grub_net_tcp_close(sock, GRUB_NET_TCP_ABORT);
+    return grub_errno;
+  }
+
+  // 장치 등록 요청 패킷 전송
+  // Protocol : SET_DEVICE
+  //------------------------------------------------------------------------------------------
+  int protocol = SET_DEVICE;
+  int deviceType = PC;
+  char sbuf[100];
+  grub_memcpy(sbuf, &deviceType, 4);
+  grub_memcpy(sbuf + 4, buf, grub_strlen(buf) + 1);
+  grub_send_protocol_packet(sock, protocol, sbuf, 4 + grub_strlen(buf) + 1);
+  //------------------------------------------------------------------------------------------
+
+  // 부팅 여부를 묻기 위한 패킷 전송
+  // Protocol : BOOTING_REQUEST
+  //------------------------------------------------------------------------------------------
+  protocol = BOOTING_REQUEST;
+  grub_send_protocol_packet(sock, protocol, buf, grub_strlen(buf) + 1);
+  //------------------------------------------------------------------------------------------
+
+  struct grub_net_buff *nnb = grub_netbuff_alloc(GRUB_NET_TCP_RESERVE_SIZE + 512);
+  grub_netbuff_reserve(nnb, GRUB_NET_TCP_RESERVE_SIZE);
+
+  grub_net_recv_tcp_packet(nnb, sock->inf, &(sock->out_nla));
+
+  grub_netbuff_free(nnb);
+  grub_net_tcp_close(sock, GRUB_NET_TCP_ABORT);
   grub_load_normal_mode();
 
   return 0;
