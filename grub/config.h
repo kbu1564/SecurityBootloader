@@ -14,8 +14,8 @@
 
 #if defined (GRUB_BUILD)
 #undef ENABLE_NLS
-#define BUILD_SIZEOF_LONG 8
-#define BUILD_SIZEOF_VOID_P 8
+#define BUILD_SIZEOF_LONG 4
+#define BUILD_SIZEOF_VOID_P 4
 #if defined __APPLE__
 # if defined __BIG_ENDIAN__
 #  define BUILD_WORDS_BIGENDIAN 1

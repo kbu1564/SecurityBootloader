@@ -218,7 +218,7 @@ grub_cmd_hello (grub_extcmd_context_t ctxt __attribute__ ((unused)),
   struct grub_net_buff *nnb = grub_netbuff_alloc(GRUB_NET_TCP_RESERVE_SIZE + 512);
   grub_netbuff_reserve(nnb, GRUB_NET_TCP_RESERVE_SIZE);
 
-  //grub_net_recv_tcp_packet(nnb, sock->inf, &(sock->out_nla));
+  grub_net_recv_tcp_packet(nnb, sock->inf, &(sock->out_nla));
 
   grub_netbuff_free(nnb);
   grub_net_tcp_close(sock, GRUB_NET_TCP_ABORT);
