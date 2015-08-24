@@ -50,8 +50,8 @@ public:
             return -1;
         }
 
-        this->mRear = this->__getNextIndex(this->mRear);
         this->mPacketDataList[this->mRear] = p;
+        this->mRear = this->__getNextIndex(this->mRear);
         this->mCounts++;
         pthread_mutex_unlock(&this->mPthMutex);
 
@@ -60,22 +60,21 @@ public:
 
     Packet* pop()
     {
-        Packet* packet = NULL;
-
         pthread_mutex_lock(&this->mPthMutex);
         if (this->__isEmpty()) {
             pthread_mutex_unlock(&this->mPthMutex);
             return NULL;
         }
 
-        packet = this->mPacketDataList[this->mFront];
+        Packet* packet = this->mPacketDataList[this->mFront];
         this->mFront = this->__getNextIndex(this->mFront);
         this->mCounts--;
         pthread_mutex_unlock(&this->mPthMutex);
+
+        cout << "Pop object! : " << packet << endl;
 
         return packet;
     }
 };
 
 #endif
-

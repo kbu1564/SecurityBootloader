@@ -4,7 +4,9 @@
 class ShutdownDevicePacket : public Packet
 {
 public:
-    int execute();
+    int   parser(char* buff, int size);
+    char* encode(int* size);
+    int   execute();
 };
 
 #endif

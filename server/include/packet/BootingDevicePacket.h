@@ -3,8 +3,12 @@
 
 class BootingDevicePacket : public Packet
 {
+private:
+    string mMacAddr;
 public:
-    int execute();
+    int   parser(char* buff, int size);
+    char* encode(int* size);
+    int   execute();
 };
 
 #endif
