@@ -44,6 +44,14 @@ public:
 
     int push(Packet* p)
     {
+<<<<<<< HEAD
+        if (this->__getNextIndex(this->mRear) == this->mFront)
+            return -1;
+
+        pthread_mutex_lock(&this->mPthMutex);
+        this->mRear = this->__getNextIndex(this->mRear);
+        this->mPacketDataList[this->mRear] = p;
+=======
         pthread_mutex_lock(&this->mPthMutex);
         if (this->__getNextIndex(this->mRear) == this->mFront) {
             pthread_mutex_unlock(&this->mPthMutex);
@@ -52,6 +60,7 @@ public:
 
         this->mPacketDataList[this->mRear] = p;
         this->mRear = this->__getNextIndex(this->mRear);
+>>>>>>> develop
         this->mCounts++;
         pthread_mutex_unlock(&this->mPthMutex);
 
@@ -60,21 +69,35 @@ public:
 
     Packet* pop()
     {
+<<<<<<< HEAD
+        if (this->__isEmpty())
+            return NULL;
+
+        pthread_mutex_lock(&this->mPthMutex);
+=======
         pthread_mutex_lock(&this->mPthMutex);
         if (this->__isEmpty()) {
             pthread_mutex_unlock(&this->mPthMutex);
             return NULL;
         }
 
+>>>>>>> develop
         Packet* packet = this->mPacketDataList[this->mFront];
         this->mFront = this->__getNextIndex(this->mFront);
         this->mCounts--;
         pthread_mutex_unlock(&this->mPthMutex);
 
+<<<<<<< HEAD
+=======
         cout << "Pop object! : " << packet << endl;
 
+>>>>>>> develop
         return packet;
     }
 };
 
 #endif
+<<<<<<< HEAD
+
+=======
+>>>>>>> develop

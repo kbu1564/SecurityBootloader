@@ -6,6 +6,26 @@
 
 int SetDevicePacket::parser(char* buff, int size)
 {
+<<<<<<< HEAD
+    int deviceType = *((int *) buff);
+    char* macAddr = buff + 4;
+
+    if (this->mDev != NULL) {
+        this->mDev->setMacAddr(macAddr);
+        this->mDev->setDeviceType(deviceType);
+    }
+
+    vector<Device> *devs = &(this->mGroups->find(macAddr)->second);
+    devs->push_back(*this->mDev);
+
+    cout << "Group ID : " << macAddr << endl;
+    for (vector<Device>::iterator iter = devs->begin(); iter != devs->end(); iter++) {
+        cout << "DeviceType : " << iter->getDeviceType() << endl;
+        cout << "IP:PORT : " << iter->getIpAddr() << ":" << iter->getPort() << endl << endl;
+    }
+
+    this->mGroups->insert(pair< string, vector<Device> >(macAddr, *devs));
+=======
     cout << "SetDevicePacket::parser()" << endl;
 
     int deviceType = *((int *) buff);
@@ -14,6 +34,7 @@ int SetDevicePacket::parser(char* buff, int size)
     this->mMacAddr = macAddr;
     this->mDeviceType = deviceType;
 
+>>>>>>> develop
     return 0;
 }
 
@@ -24,6 +45,8 @@ char* SetDevicePacket::encode(int* size)
 
 int SetDevicePacket::execute()
 {
+<<<<<<< HEAD
+=======
     cout << "SetDevicePacket::execute()" << endl;
 
     if (this->mDev == NULL) {
@@ -61,6 +84,7 @@ int SetDevicePacket::execute()
 
     this->mGroups->insert(pair< string, vector<Device> >(macAddr, *devs));
 
+>>>>>>> develop
     return 0;
 }
 

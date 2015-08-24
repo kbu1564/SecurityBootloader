@@ -4,6 +4,10 @@
 #include "Device.h"
 #include "packet/ShutdownDevicePacket.h"
 
+<<<<<<< HEAD
+int ShutdownDevicePacket::execute()
+{
+=======
 int ShutdownDevicePacket::parser(char* buff, int size)
 {
     this->mMacAddr = buff;
@@ -50,6 +54,7 @@ int ShutdownDevicePacket::execute()
         }
     }
 
+>>>>>>> develop
     return 0;
 }
 

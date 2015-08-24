@@ -4,6 +4,10 @@
 #include "Device.h"
 #include "packet/BootingDevicePacket.h"
 
+<<<<<<< HEAD
+int BootingDevicePacket::execute()
+{
+=======
 int BootingDevicePacket::parser(char* buff, int size)
 {
     this->mMacAddr = buff;
@@ -50,6 +54,7 @@ int BootingDevicePacket::execute()
         }
     }
 
+>>>>>>> develop
     return 0;
 }
 
