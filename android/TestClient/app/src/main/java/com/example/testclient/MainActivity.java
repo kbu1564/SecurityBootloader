@@ -183,8 +183,8 @@ public class MainActivity extends Activity {
         }
 
         /** 
-         * @Method Name	:  processMsg
-         * @Method 기능	:  수신 메시지를 프로토콜 규약에 맞제 처리
+         * @Method Name	:  receiveMsg
+         * @Method 기능	:  수신 메시지를 프로토콜 규약에 맞게 처리
          * @변경이력		: 
          */
         private void receiveMsg(byte[] message)
@@ -197,12 +197,15 @@ public class MainActivity extends Activity {
 
                 // HeartBeat 체크용 프로토콜
                 case Protocol.PING_DEVICE:
-                    //data = ByteType.byteToString(getbytes(message, 8, size - 8), ByteOrder.LITTLE_ENDIAN);
+
+                    // 프로세스가 살아 있음을 메시지로 보낸다.
+                    sendMessage(Protocol.PONG_DEVICE);
 
                     break;
 
                 // 부팅상태값 요청
                     case Protocol.BOOTING_REQUEST :
+                    // 앱 실행!
 
                     break;
             }
@@ -216,6 +219,11 @@ public class MainActivity extends Activity {
 
         }
 
+        /** 
+         * @Method Name	:  receiveMsg
+         * @Method 기능	:  프로토콜 규약에 메시지 송신
+         * @변경이력		: 
+         */
         private void sendMessage(int protocol)
         {
             byte[] sendMsg = null;
@@ -223,35 +231,61 @@ public class MainActivity extends Activity {
             String pcIp = "FA:16:3E:37:06:7B";
             int deviceType = DeviceType.PHONE;
 
+            try{
+
             switch (protocol)
             {
+
                 // HeartBeat 응답에 대한 프로토콜
                 case Protocol.PONG_DEVICE:
 
-                    sendMsg = makeMsg(protocol, deviceType, pcIp);
-
-                    try {
-                        dos.write(sendMsg);
-                    }catch (IOException e){
-                        Log.e("ERROR:sendMessage()", "Fail send message");
-                    }
+                    sendMsg = makeMsg(protocol, 0xFFFF);
+                    dos.write(sendMsg);
 
                     break;
 
-                case Protocol.SET_DEVICE:               // 스마트폰의 서비스가 실행 되었을 때 자신이 제어할 대상을 등록 대기상태 요청
+                // 스마트폰의 서비스가 실행 되었을 때 자신이 제어할 대상을 등록 대기상태 요청
+                case Protocol.SET_DEVICE:
+
+                    sendMsg = makeMsg(protocol, deviceType, pcIp);
+                    dos.write(sendMsg);
+
+                    break;
+
                 case Protocol.SHUTDOWN_DEVICE:          // Phone => Grub : 장치 강제 종료
                 case Protocol.BOOTING_DEVICE:           // Phone => Grub : 장치 부팅 진행
 
                     sendMsg = makeMsg(protocol, pcIp);
-
-                    try {
-                        dos.write(sendMsg);
-                    }catch (IOException e){
-                        Log.e("ERROR:sendMessage()", "Fail send message");
-                    }
+                    dos.write(sendMsg);
 
                     break;
+                }
+            }catch (IOException e){
+                Log.e("ERROR:sendMessage()", "Fail send message");
             }
+        }
+
+        /** 
+         * @Method Name	: makeMsg
+         * @Method 기능	: 송신을 위해 메시지의 데이터 타입을 byte 타입으로 변환
+         * @변경이력		: 
+         */
+        private byte[] makeMsg(int protocol, int data){
+
+            int buffSize =  8 + Integer.SIZE/8;
+
+            // byte 변환
+            byte[] sendProtocol = ByteType.intToByte(protocol, ByteOrder.LITTLE_ENDIAN);
+            byte[] sendSize = ByteType.intToByte(buffSize, ByteOrder.LITTLE_ENDIAN);
+            byte[] sendData = ByteType.intToByte(data, ByteOrder.LITTLE_ENDIAN);
+
+            // byte 합치기
+            byte[] sendMsg = new byte[buffSize];
+            System.arraycopy(sendProtocol, 0, sendMsg, 0, sendProtocol.length);
+            System.arraycopy(sendSize, 0, sendMsg, 4, sendSize.length);
+            System.arraycopy(sendData, 0, sendMsg, 8, sendData.length);
+
+            return sendMsg;
         }
 
         private byte[] makeMsg(int protocol, String data){
