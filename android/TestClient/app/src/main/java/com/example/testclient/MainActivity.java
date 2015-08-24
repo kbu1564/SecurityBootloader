@@ -129,7 +129,6 @@ public class MainActivity extends Activity {
                 if(socket != null)
                     connection();
 
-
             } catch(Exception e){
                 if(connCount < 5)
                     network();
@@ -171,13 +170,9 @@ public class MainActivity extends Activity {
                             // 받은 메시지를 처리 한다.
                             receiveMsg(msg);
                         } catch (IOException e1) {
-                            try{
-                                dos.close();
-                                dis.close();
-                                socket.close();
-                            }catch(IOException e2){
-                                Log.e("ERROR::connection()", e2.getMessage());
-                            }
+                            if(dos != null) try{ dos.close(); }catch (IOException e2) {Log.e("ERROR::connection()", e2.getMessage());}
+                            if(dis != null) try{ dos.close(); }catch (IOException e2) {Log.e("ERROR::connection()", e2.getMessage());}
+                            if(socket != null) try{ dos.close(); }catch (IOException e2) {Log.e("ERROR::connection()", e2.getMessage());}
                             break;
                         }
                     }
@@ -207,7 +202,7 @@ public class MainActivity extends Activity {
                     break;
 
                 // 부팅상태값 요청
-                case Protocol.BOOTING_REQUEST:
+                    case Protocol.BOOTING_REQUEST :
 
                     break;
             }
@@ -223,30 +218,78 @@ public class MainActivity extends Activity {
 
         private void sendMessage(int protocol)
         {
+            byte[] sendMsg = null;
+
+            String pcIp = "FA:16:3E:37:06:7B";
+            int deviceType = DeviceType.PHONE;
 
             switch (protocol)
             {
-
                 // HeartBeat 응답에 대한 프로토콜
                 case Protocol.PONG_DEVICE:
 
-                    break;
+                    sendMsg = makeMsg(protocol, deviceType, pcIp);
 
-                // 스마트폰의 서비스가 실행 되었을 때 자신이 제어할 대상을 등록 대기상태 요청
-                case Protocol.SET_DEVICE:
-
-                    break;
-
-                // Phone => Grub : 장치 강제 종료
-                case Protocol.SHUTDOWN_DEVICE:
+                    try {
+                        dos.write(sendMsg);
+                    }catch (IOException e){
+                        Log.e("ERROR:sendMessage()", "Fail send message");
+                    }
 
                     break;
 
-                // Phone => Grub : 장치 부팅 진행
-                case Protocol.BOOTING_DEVICE:
+                case Protocol.SET_DEVICE:               // 스마트폰의 서비스가 실행 되었을 때 자신이 제어할 대상을 등록 대기상태 요청
+                case Protocol.SHUTDOWN_DEVICE:          // Phone => Grub : 장치 강제 종료
+                case Protocol.BOOTING_DEVICE:           // Phone => Grub : 장치 부팅 진행
+
+                    sendMsg = makeMsg(protocol, pcIp);
+
+                    try {
+                        dos.write(sendMsg);
+                    }catch (IOException e){
+                        Log.e("ERROR:sendMessage()", "Fail send message");
+                    }
 
                     break;
             }
+        }
+
+        private byte[] makeMsg(int protocol, String data){
+
+            int buffSize =  8 + data.length();
+
+            // byte 변환
+            byte[] sendProtocol = ByteType.intToByte(protocol, ByteOrder.LITTLE_ENDIAN);
+            byte[] sendSize = ByteType.intToByte(buffSize, ByteOrder.LITTLE_ENDIAN);
+            byte[] sendData = ByteType.stringToByte(data, ByteOrder.LITTLE_ENDIAN);
+
+            // byte 합치기
+            byte[] sendMsg = new byte[buffSize];
+            System.arraycopy(sendProtocol, 0, sendMsg, 0, sendProtocol.length);
+            System.arraycopy(sendSize, 0, sendMsg, 4, sendSize.length);
+            System.arraycopy(sendData, 0, sendMsg, 8, sendData.length);
+
+            return sendMsg;
+        }
+
+        private byte[] makeMsg(int protocol, int deviceType, String data){
+
+            int buffSize =  8 + Integer.SIZE/8 + data.length();
+
+            // byte 변환
+            byte[] sendProtocol = ByteType.intToByte(protocol, ByteOrder.LITTLE_ENDIAN);
+            byte[] sendSize = ByteType.intToByte(buffSize, ByteOrder.LITTLE_ENDIAN);
+            byte[] sendDeviceType = ByteType.intToByte(deviceType, ByteOrder.LITTLE_ENDIAN);
+            byte[] sendData = ByteType.stringToByte(data, ByteOrder.LITTLE_ENDIAN);
+
+            // byte 합치기
+            byte[] sendMsg = new byte[buffSize];
+            System.arraycopy(sendProtocol, 0, sendMsg, 0, sendProtocol.length);
+            System.arraycopy(sendSize, 0, sendMsg, 4, sendSize.length);
+            System.arraycopy(sendDeviceType, 0, sendMsg, 8, sendDeviceType.length);
+            System.arraycopy(sendData, 0, sendMsg, 12, sendData.length);
+
+            return sendMsg;
         }
 
         /** 
@@ -256,6 +299,10 @@ public class MainActivity extends Activity {
          */
         @Override
         protected void onPostExecute(Void result) {
+            if(dos != null) try{ dos.close(); }catch (IOException e2) {Log.e("ERROR::connection()", e2.getMessage());}
+            if(dis != null) try{ dos.close(); }catch (IOException e2) {Log.e("ERROR::connection()", e2.getMessage());}
+            if(socket != null) try{ dos.close(); }catch (IOException e2) {Log.e("ERROR::connection()", e2.getMessage());}
+
             super.onPostExecute(result);
         }
 

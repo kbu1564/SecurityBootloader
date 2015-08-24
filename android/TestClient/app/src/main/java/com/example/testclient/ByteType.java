@@ -3,8 +3,16 @@ package com.example.testclient;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-/**
- * Created by 주현 on 2015-08-24.
+/** 
+ * @FileName		: ByteType.java 
+ * @Project		: ByteType 
+ * @Date			: 2015. 8. 24. 
+ * @작성자			: yujoo 
+ * @프로그램 설명		: 바이트 타입과 정수/문자열 간에 타입 변환
+ * @프로그램 기능		: 
+ *                          byte <=> Integer
+ *                          byte <=> String
+ * @변경이력		: 
  */
 public class ByteType {
     /** 
@@ -15,15 +23,14 @@ public class ByteType {
      * @param order
      * @return 
      */
-    public static byte[] intTobyte(int integer, ByteOrder order) {
+    public static byte[] intToByte(int integer, ByteOrder order) {
 
         ByteBuffer buff = ByteBuffer.allocate(Integer.SIZE/8);
-        buff.order(order);
-
-        // 인수로 넘어온 integer을 putInt로설정
-        buff.putInt(integer);
+        buff.order(order);      // Set big/little endian
+        buff.putInt(integer);   // Insert Integer value to ByteBuffer
 
         System.out.println("intTobyte : " + buff);
+
         return buff.array();
     }
 
@@ -38,30 +45,56 @@ public class ByteType {
     public static int byteToInt(byte[] bytes, ByteOrder order) {
 
         ByteBuffer buff = ByteBuffer.allocate(Integer.SIZE/8);
-        buff.order(order);
-
-        // buff사이즈는 4인 상태임
-        // bytes를 put하면 position과 limit는 같은 위치가 됨.
-        buff.put(bytes);
-        // flip()가 실행 되면 position은 0에 위치 하게 됨.
-        buff.flip();
+        buff.order(order);      // Set big/little endian
+        buff.put(bytes);        // Insert byte value to ByteBuffer
+        buff.position(0);       // position(0) 실행 되면 position은 0에 위치 하게 됨.
 
         System.out.println("byteToInt : " + buff);
 
         return buff.getInt(); // position위치(0)에서 부터 4바이트를 int로 변경하여 반환
     }
 
+    /** 
+     * @Method Name	: byteToString 
+     * @Method 기능	: byte 타입을 String 타입으로 변환
+     * @변경이력		: 
+     * @param bytes
+     * @param order
+     * @return 
+     */
     public static String byteToString(byte[] bytes, ByteOrder order) {
 
-        ByteBuffer buffer = ByteBuffer.allocate(bytes.length);
-        buffer.order(order);
-        buffer.put( bytes );
+        ByteBuffer buff = ByteBuffer.allocate(bytes.length);
+        buff.order(order);     // Set big/little endian
+        buff.put(bytes);       // Insert byte value to ByteBuffer
+        buff.position(0);      // position(0) 실행 되면 position은 0에 위치 하게 됨.
 
-        byte[] tmpbytes = new byte[bytes.length];
+        byte[] temp = new byte[bytes.length];
+        buff.get(temp);
 
-        buffer.position(0);
-        buffer.get(tmpbytes);
+        String result = new String(temp);
 
-        return new String(tmpbytes);
+        System.out.println("byteToString : " + result);
+
+        return result;
+    }
+
+    /** 
+     * @Method Name	: stringToByte 
+     * @Method 기능	: string 타입을 byte 타입으로 변환
+     * @변경이력		: 
+     * @param string
+     * @param order
+     * @return 
+     */
+    public static byte[] stringToByte(String string, ByteOrder order) {
+
+        ByteBuffer buff = ByteBuffer.allocate(string.length());
+        buff.order(order);              // Set big/little endian
+        buff.put(string.getBytes());    // Insert byte value to ByteBuffer
+
+        System.out.println("stringToByte : " + buff);
+
+        return buff.array();
     }
 }
