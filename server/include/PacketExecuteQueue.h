@@ -44,12 +44,14 @@ public:
 
     int push(Packet* p)
     {
-        if (this->__getNextIndex(this->mRear) == this->mFront)
-            return -1;
-
         pthread_mutex_lock(&this->mPthMutex);
-        this->mRear = this->__getNextIndex(this->mRear);
+        if (this->__getNextIndex(this->mRear) == this->mFront) {
+            pthread_mutex_unlock(&this->mPthMutex);
+            return -1;
+        }
+
         this->mPacketDataList[this->mRear] = p;
+        this->mRear = this->__getNextIndex(this->mRear);
         this->mCounts++;
         pthread_mutex_unlock(&this->mPthMutex);
 
@@ -58,18 +60,21 @@ public:
 
     Packet* pop()
     {
-        if (this->__isEmpty())
-            return NULL;
-
         pthread_mutex_lock(&this->mPthMutex);
+        if (this->__isEmpty()) {
+            pthread_mutex_unlock(&this->mPthMutex);
+            return NULL;
+        }
+
         Packet* packet = this->mPacketDataList[this->mFront];
         this->mFront = this->__getNextIndex(this->mFront);
         this->mCounts--;
         pthread_mutex_unlock(&this->mPthMutex);
+
+        cout << "Pop object! : " << packet << endl;
 
         return packet;
     }
 };
 
 #endif
-

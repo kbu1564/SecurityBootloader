@@ -223,6 +223,7 @@ int HANDLER Server::__receive(epoll_event currEvent, PacketExecuteQueue& q)
         PacketParser pp;
         Packet* packet = pp.decode(buf, nread);
         if (packet != NULL) {
+            // get send to server <- client
             for (vector<Device>::iterator dev = this->mDevices.begin(); dev != this->mDevices.end(); dev++) {
                 if (dev->getSock() == currEvent.data.fd) {
                     packet->setDevice(&(*dev));
@@ -242,6 +243,12 @@ int HANDLER Server::__disconnect(epoll_event currEvent, PacketExecuteQueue& q)
     // search to disconnect socket of client
     for (vector<Device>::iterator devIter = this->mDevices.begin(); devIter != this->mDevices.end(); devIter++) {
         if (devIter->getSock() == currEvent.data.fd) {
+            //multimap< string, vector<Device> >::iterator dev = this->mGroups->find(devIter->getMacAddr());
+            // unregister device to group
+            //if (dev != this->mGroups->end()) {
+            //    this->mGroups->erase(dev);
+            //}
+
             // setting delete iterator
             vector<Device>::iterator delDev = devIter;
             this->mDevices.erase(delDev);
