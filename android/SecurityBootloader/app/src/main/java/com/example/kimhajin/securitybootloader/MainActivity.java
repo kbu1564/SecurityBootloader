@@ -112,6 +112,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                             Intent intent = new Intent(getApplicationContext(), PersistentService.class);
                             intent.putExtra("startBtn", true);
                             startService(intent);
+                            MainActivity.this.moveTaskToBack(true);
                         }
                     })
                     .show(); //팝업창 보여줌
@@ -134,6 +135,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                             Intent intent = new Intent(getApplicationContext(), PersistentService.class);
                             intent.putExtra("cancelBtn", true);
                             startService(intent);
+                            MainActivity.this.moveTaskToBack(true);
                         }
                     })
                     .show(); //팝업창 보여줌

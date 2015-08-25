@@ -207,7 +207,7 @@ public class PersistentService extends Service implements Runnable {
      * @Method 기능    :  소켓 연결이 되었을 때 알림 메시지를 사용자에게 보여준다.
      * @변경이력        :
      */
-    private void notifiyConnection(){
+    private void notifiyConnection(String contentTitle, String contentText){
 
         // 노티피케이션
         NotificationManager mManager = (NotificationManager)getSystemService((Context.NOTIFICATION_SERVICE));
@@ -224,8 +224,6 @@ public class PersistentService extends Service implements Runnable {
         // 알람 해제 방법을 설정
         n.flags = Notification.FLAG_AUTO_CANCEL;
         // 확장된 상태바에 나타낼 제목과 내용
-        final String contentTitle = "Security Bootloater";
-        final String contentText = "중개서버와 연결이 되었습니다. 확인하시겠습니까?";
         // 확장된 상태바에 놀렀을때 이동할 액티비티 설정
         Intent i = new Intent(getApplicationContext(), MainActivity.class);
         PendingIntent pi = PendingIntent.getActivities(this,0, new Intent[]{i}, 0);
@@ -298,7 +296,7 @@ public class PersistentService extends Service implements Runnable {
 
                 // 정상적으로 소켓이 연결되었을 경우
                 if (socket != null) {
-                    notifiyConnection();
+                    //notifiyConnection("Security Bootloater", "중개서버와 연결이 되었습니다. 확인하시겠습니까?");
                     connection();
                 }
 
@@ -386,8 +384,8 @@ public class PersistentService extends Service implements Runnable {
                     Log.d("Protocol", "Booting Request");
                     Log.e("Protocol", "Booting Request");
 
-                    sendMessage(Protocol.BOOTING_DEVICE);
-
+                    notifiyConnection("Security Bootloater", "컴퓨터의 부팅이 감지 되었습니다.");
+                    
                     break;
             }
 
