@@ -19,7 +19,4 @@
 
 ## License
    - [GPL3.0](https://github.com/kbu1564/SecurityBootloader/blob/develop/LICENSE)
-
    - [GNU](https://www.gnu.org/licenses/licenses.html)
-
-1st CodeCamp by TNTeam
