@@ -28,7 +28,6 @@ import java.nio.ByteOrder;
  * @FileName		: PersistentService.java 
  * @Project		: SecurityBootloder 
  * @Date			: 2015. 8. 24. 
- * @작성자			: 주현 
  * @프로그램 설명		: 백그라운드에서 계속 중개서버와 통신을 하는 클레스
  * @프로그램 기능		: 
  * @변경이력		: 
@@ -238,7 +237,6 @@ public class PersistentService extends Service implements Runnable {
      * @FileName        : PersistentService.java
      * @Project        : NetworkTask
      * @Date            : 2015. 8. 23.
-     * @작성자            : 주현
      * @프로그램 설명        : 비동기 쓰레드 네트워크 통신
      * @프로그램 기능        : 중개서버와 TCP/IP 소켓 통신
      * @변경이력        :
