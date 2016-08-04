@@ -7,7 +7,6 @@ import java.nio.ByteOrder;
  * @FileName		: ByteType.java 
  * @Project		: ByteType 
  * @Date			: 2015. 8. 24. 
- * @작성자			: yujoo 
  * @프로그램 설명		: 바이트 타입과 정수/문자열 간에 타입 변환
  * @프로그램 기능		: 
  *                          byte <=> Integer
