@@ -11,7 +11,6 @@ import android.util.Log;
  * @FileName		: RestartService.java 
  * @Project		: SecurityBootloder 
  * @Date			: 2015. 8. 24. 
- * @작성자			: 주현 
  * @프로그램 설명		: 백그라운드에서 서비스가 종료될시 다시 서비스를 하는 클레스
  * @프로그램 기능		: 
  * @변경이력		: 
