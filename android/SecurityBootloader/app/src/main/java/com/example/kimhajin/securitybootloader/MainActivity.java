@@ -24,15 +24,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.UUID;
 
-/** 
- * @FileName		: MainActivity.java 
- * @Project		: SecurityBootloder 
- * @Date			: 2015. 8. 24. 
- * @작성자			: 주현 
- * @프로그램 설명		: main 클레스
- * @프로그램 기능		: 
- * @변경이력		: 
- */
+
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
 
