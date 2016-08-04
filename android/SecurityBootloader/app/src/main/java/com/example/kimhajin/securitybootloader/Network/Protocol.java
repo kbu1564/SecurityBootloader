@@ -4,7 +4,6 @@ package com.example.kimhajin.securitybootloader.Network;
  * @FileName		: Protocol.java 
  * @Project		: SecurityBootloder 
  * @Date			: 2015. 8. 23. 
- * @작성자			: 주현 
  * @프로그램 설명		: 프로토콜 정의
  * @프로그램 기능		: 
  * @변경이력		: 
