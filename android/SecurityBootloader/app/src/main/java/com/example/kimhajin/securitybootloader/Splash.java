@@ -9,7 +9,6 @@ import android.os.Handler;
  * @FileName		: Splash.java 
  * @Project		: SecurityBootloder 
  * @Date			: 2015. 8. 24. 
- * @작성자			: 주현 
  * @프로그램 설명		: 어플리케이션이 최초 실행 되었을 때의 화면을 출력하는 클레스
  * @프로그램 기능		: 
  * @변경이력		: 
