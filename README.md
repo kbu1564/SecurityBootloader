@@ -21,7 +21,7 @@
 5. [Android related matters](https://github.com/kbu1564/SecurityBootloader/issues/17)
 
 ## Project Introduce PPTX(PDF)
-An interim announcement >> [PDF Link : TNTeams_ Security Booting Manager >> #1중간발표](https://github.com/kbu1564/SecurityBootloader/blob/develop/TNTeams_%20Security%20Booting%20Manager_%E1%84%8C%E1%85%AE%E1%86%BC%E1%84%80%E1%85%A1%E1%86%AB%E1%84%87%E1%85%A1%E1%86%AF%E1%84%91%E1%85%AD.pdf)
+An interim announcement >> [PDF Link : TNTeams_ Security Booting Manager >> #1중간발표.pdf](https://github.com/kbu1564/SecurityBootloader/raw/develop/TNTeams_%20Security%20Booting%20Manager_%E1%84%8C%E1%85%AE%E1%86%BC%E1%84%80%E1%85%A1%E1%86%AB%E1%84%87%E1%85%A1%E1%86%AF%E1%84%91%E1%85%AD.pdf)
 
 ## License
    - [GPL3.0](https://github.com/kbu1564/SecurityBootloader/blob/develop/LICENSE)
