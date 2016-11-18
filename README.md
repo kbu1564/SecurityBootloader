@@ -1,7 +1,6 @@
 # Grub based Security Multi-Bootloader System (V1.0)
 
 
-
 [![GitHub license](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://raw.githubusercontent.com/IWillFindYou/SecurityBootManager/develop/LICENSE)
 
 ## Introduction
@@ -31,5 +30,5 @@
    
 ## Update history List
    - V1.0 Grub based Security Multi-Bootloader System : Android phone 이용한 부팅제어 시스템
-   - V1.1 SecurityBootManager CoreLibrary : 부팅 시 주변 환경 정보를 얻을 수 있는 Framwork 
-     - [V1.1 SecurityBootManager CoreLibrary](https://github.com/GangHoyong/SecurityBootManager)
+   - [V1.1 SecurityBootManager CoreLibrary](https://github.com/GangHoyong/SecurityBootManager) : 부팅 시 주변 환경 정보를 얻을 수 있는 Framwork 
+    
