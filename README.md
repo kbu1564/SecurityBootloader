@@ -8,7 +8,7 @@
 
 ## Developer
 [@kbu1564](https://github.com/kbu1564)
-[@GangHoyong](https://github.com/GangHoyong)
+[@KangHoyong](https://github.com/KangHoyong)
 [@JuHyun Yu](https://github.com/formfoxk)
 [@kimhajin](https://github.com/kimhajin)
 
